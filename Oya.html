@@ -1,0 +1,1423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ofuje CBT | Professional Examination Portal</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+    :root {
+        --primary: #4f46e5;
+        --primary-dark: #4338ca;
+        --secondary: #64748b;
+        --bg: #f8fafc;
+        --white: #ffffff;
+        --text-dark: #1e293b;
+        --error: #ef4444;
+        --success: #22c55e;
+        --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    }
+
+    body.dark-mode {
+        --bg: #1f2937;
+        --white: #374151;
+        --text-dark: #f3f4f6;
+        --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: var(--bg); color: var(--text-dark); line-height: 1.6; transition: background 0.3s, color 0.3s; }
+    .hidden { display: none !important; }
+
+    /* Fade Animations */
+    .fade-enter { opacity: 0; transform: scale(0.95); transition: 0.3s ease; }
+    .fade-enter-active { opacity: 1; transform: scale(1); transition: 0.3s ease; }
+    .fade-exit { opacity: 1; transform: scale(1); transition: 0.2s ease; }
+    .fade-exit-active { opacity: 0; transform: scale(0.95); transition: 0.2s ease; }
+
+    .container { max-width: 900px; margin: 2rem auto; padding: 1.5rem; transition: background 0.3s; }
+    header { text-align: center; margin-bottom: 2rem; }
+    header h1 { color: var(--primary); font-size: 2.5rem; }
+    .card { background: var(--white); padding: 2rem; border-radius: 12px; box-shadow: var(--shadow); transition: background 0.3s, color 0.3s, transform 0.2s; }
+    .card:hover { transform: scale(1.02); }
+
+    .form-group { margin-bottom: 1.5rem; }
+    label { display: block; margin-bottom: 0.5rem; font-weight: 600; }
+    input[type="text"], input[type="number"], select {
+        width: 100%; padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; transition: border 0.2s;
+    }
+    input[type="text"]:focus, select:focus { border-color: var(--primary); }
+
+    .btn {
+        background: var(--primary); color: white; border: none; padding: 0.75rem 1.5rem;
+        border-radius: 8px; cursor: pointer; font-weight: 600; width: 100%; transition: 0.3s, transform 0.15s;
+    }
+    .btn:hover { background: var(--primary-dark); transform: scale(1.03); }
+    .btn:active { transform: scale(0.97); }
+
+    .btn-outline { background: transparent; color: var(--primary); border: 2px solid var(--primary); margin-top: 1rem; }
+
+    /* Dark Mode Toggle */
+    .dark-toggle {
+        position: fixed; top: 1rem; right: 1rem;
+        background: var(--primary); color: #fff; border: none;
+        padding: 0.5rem 1rem; border-radius: 20px; cursor: pointer; font-weight: bold; z-index: 999;
+        transition: 0.3s, transform 0.15s;
+    }
+    .dark-toggle:hover { transform: scale(1.1); }
+
+    .search-box { position: relative; margin-bottom: 1.5rem; }
+    .search-box i { position: absolute; left: 1rem; top: 1rem; color: var(--secondary); }
+    .search-box input { padding-left: 2.5rem; }
+
+    .grid-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+    .item-card { 
+        background: var(--white); border: 1px solid #e2e8f0; padding: 1.5rem; 
+        border-radius: 8px; text-align: center; cursor: pointer; transition: 0.3s, transform 0.2s;
+    }
+    .item-card:hover { border-color: var(--primary); transform: translateY(-5px) scale(1.03); }
+    .item-card i { font-size: 2rem; color: var(--primary); margin-bottom: 1rem; }
+
+    .quiz-header { display: flex; justify-content: space-between; margin-bottom: 2rem; background: #eef2ff; padding: 1rem; border-radius: 8px; transition: background 0.3s; }
+    body.dark-mode .quiz-header { background: #374151; }
+
+    .options-list { list-style: none; }
+    .option { 
+        background: #f1f5f9; padding: 1rem; margin-bottom: 0.5rem; 
+        border-radius: 8px; cursor: pointer; border: 2px solid transparent; transition: 0.3s, transform 0.15s, background 0.3s;
+    }
+    .option:hover { transform: scale(1.02); }
+    .option.selected { border-color: var(--primary); background: #e0e7ff; animation: popFade 0.25s; }
+    body.dark-mode .option { background: #4b5563; color: #f3f4f6; }
+    body.dark-mode .option.selected { background: #6366f1; }
+
+    @keyframes popFade {
+        0% { transform: scale(0.95); opacity: 0.6; }
+        50% { transform: scale(1.05); opacity: 1; }
+        100% { transform: scale(1); opacity: 1; }
+    }
+
+    .nav-btns { display: flex; gap: 1rem; margin-top: 2rem; flex-wrap: wrap; }
+
+    .result-score { font-size: 3rem; font-weight: bold; color: var(--primary); text-align: center; }
+    .correction-item { margin-top: 1rem; padding: 1rem; border-left: 4px solid var(--primary); background: var(--bg); transition: 0.3s; }
+
+    .question-nav { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; justify-content: center; }
+    .question-nav button {
+        padding: 0.5rem 0.75rem; border-radius: 6px; border: 1px solid var(--primary); background: var(--white);
+        cursor: pointer; font-weight: bold; transition: 0.2s, transform 0.15s;
+    }
+    .question-nav button:hover { transform: scale(1.1); }
+    .question-nav button.answered { background: var(--success); color: #fff; }
+    .question-nav button.unanswered { background: black; color: #fff; }
+    body.dark-mode .question-nav button { background: #374151; color: #f3f4f6; border: 1px solid var(--primary); }
+    body.dark-mode .question-nav button.answered { background: #22c55e; color: #fff; }
+    body.dark-mode .question-nav button.unanswered { background: black; color: #fff; }
+</style>
+</head>
+<body>
+
+<button class="dark-toggle" onclick="toggleDarkMode()">🌙 Dark Mode</button>
+
+<div class="container">
+    <header>
+        <h1><i class="fas fa-graduation-cap"></i> Ofuje CBT</h1>
+        <p>Professional Excellence in Assessment</p>
+    </header>
+
+    <div id="view-login" class="card">
+        <h2 style="margin-bottom: 1rem;">Enter Access Code</h2>
+        <div class="form-group">
+            <input type="text" id="access-code" placeholder="Enter alphanumeric code (e.g. OFUJE-001)">
+            <p id="login-error" style="color: var(--error); margin-top: 0.5rem;" class="hidden"></p>
+        </div>
+        <button class="btn" onclick="handleLogin()">Access Dashboard</button>
+        <p style="margin-top: 1rem; font-size: 0.8rem; color: var(--secondary);">Message 08107528980 on WhatsApp to get your access code</p>
+    </div>
+
+    <div id="view-courses" class="hidden">
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="courseSearch" placeholder="Search courses..." onkeyup="filterItems('courseSearch', 'course-grid')">
+        </div>
+        <h3>Select a Course</h3>
+        <div class="grid-list" id="course-grid"></div>
+    </div>
+
+    <div id="view-topics" class="hidden">
+        <button class="btn-outline" onclick="showView('view-courses')"><i class="fas fa-arrow-left"></i> Back</button>
+        <div class="search-box" style="margin-top: 1rem;">
+            <i class="fas fa-search"></i>
+            <input type="text" id="topicSearch" placeholder="Search topics..." onkeyup="filterItems('topicSearch', 'topic-grid')">
+        </div>
+        <h3 id="selected-course-title">Topics</h3>
+        <div class="grid-list" id="topic-grid" style="margin-top: 1rem;"></div>
+    </div>
+
+    <div id="view-settings" class="hidden card">
+        <h3>Exam Configuration</h3>
+        <div class="form-group">
+            <label>Number of Questions</label>
+            <select id="set-questions">
+                              <option value="10">10 Questions</option>
+                <option value="20">20 Questions</option>
+                <option value="30">30 Questions</option>
+                <option value="40">40 Questions</option>
+                                <option value="45">45 Questions</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Timer</label>
+            <select id="set-timer">
+                <option value="0">No Timer</option>
+                <option value="20">20 Minutes</option>
+                <option value="60">60 Minutes</option>
+            </select>
+        </div>
+        <button class="btn" onclick="startQuiz()">Start Examination</button>
+    </div>
+
+    <div id="view-quiz" class="hidden card">
+        <div class="quiz-header">
+            <span><i class="fas fa-clock"></i> <span id="timer-display">Untimed</span></span>
+            <span>Q: <span id="q-count">0/0</span></span>
+        </div>
+        <div id="question-container"></div>
+        <div class="question-nav" id="question-nav"></div>
+        <div class="nav-btns">
+            <button class="btn btn-outline" id="prevBtn" onclick="changeQuestion(-1)">Previous</button>
+            <button class="btn" id="nextBtn" onclick="changeQuestion(1)">Next</button>
+            <button class="btn" id="submitBtn" onclick="calculateResults()" style="background: var(--success);">Submit</button>
+        </div>
+    </div>
+
+    <div id="view-results" class="hidden card">
+        <h2 style="text-align: center;">Assessment Summary</h2>
+        <div class="result-score" id="res-score">0%</div>
+        <div id="res-details" style="text-align: center; margin-bottom: 2rem;"></div>
+        <h3>Corrections</h3>
+        <div id="corrections-list"></div>
+        <button class="btn" style="margin-top: 2rem;" onclick="location.reload()">Return to Home</button>
+    </div>
+</div>
+
+<script>
+const accessCodes = ["OFUJE-001","OFUJE-002","OFUJE-003"];
+const database = {
+    "PHYSICS":["PHY101: General Physics I","PHY102: General Physics II","PHY103: Practical Physics I"],
+    "CHEMISTRY":["CHM101: General Chemistry I","CHM102: General Chemistry II","CHM107: Practical Chemistry I"],
+    "MATHEMATICS":["MTH101: General Mathematics I","MTH102: General Mathematics II","MTH103: General Mathematics III/Coordinate Geometry"],
+    "BIOLOGY":["BIO101: General Biology I","BIO102: General Biology II","BIO103: General Biology III / Microbiolgy and Parasitology"],
+    "GENERAL STUDIES":["GST101/GST111: Use Of English/communication In English I","GST102/GST112: Use of English II / Nigerian Peoples and Culture","GST103: Computer Fundamentals / ICT"]
+};
+const questionsDB = {
+
+    
+"PHY101: General Physics I":[
+    {q:"What is the SI unit of force?", a:["Newton","Joule","Watt","Pascal"], correct:0},
+    {q:"Acceleration is defined as the rate of change of...?", a:["Speed","Velocity","Distance","Mass"], correct:1},
+    {q:"The dimension of work is?", a:["ML²T⁻²","MLT⁻²","M²L²T⁻²","MLT⁻¹"], correct:0},
+    {q:"A scalar quantity has...?", a:["Magnitude only","Direction only","Both magnitude and direction","Neither"], correct:0},
+    {q:"Which of the following is a vector quantity?", a:["Speed","Distance","Displacement","Temperature"], correct:2},
+    {q:"The slope of a displacement-time graph gives?", a:["Velocity","Acceleration","Speed","Force"], correct:0},
+    {q:"If velocity is constant, acceleration is?", a:["Zero","Positive","Negative","Variable"], correct:0},
+    {q:"Newton's First Law is also called?", a:["Law of Inertia","Law of Action-Reaction","Law of Acceleration","Law of Motion"], correct:0},
+    {q:"The force required to accelerate 1 kg of mass by 1 m/s² is?", a:["1 Newton","1 Joule","1 Watt","1 Pascal"], correct:0},
+    {q:"The impulse experienced by a body is equal to the change in its...?", a:["Momentum","Velocity","Acceleration","Force"], correct:0},
+    {q:"For a perfectly inelastic collision, the bodies stick together. This means kinetic energy is...?", a:["Not conserved","Conserved","Doubled","Zero"], correct:0},
+    {q:"The unit of power in SI is?", a:["Watt","Joule","Newton","Pascal"], correct:0},
+    {q:"Common velocity of two bodies after collision is used in...?", a:["Perfectly inelastic collision","Elastic collision","Explosion","Oscillation"], correct:0},
+    {q:"The time interval in motion is a measure of...?", a:["Duration","Speed","Acceleration","Force"], correct:0},
+    {q:"If a body covers equal distances in equal time intervals, its motion is...?", a:["Uniform","Non-uniform","Accelerated","Retarded"], correct:0},
+    {q:"A vector can be represented by...?", a:["Arrow","Point","Line segment","Circle"], correct:0},
+    {q:"Newton's Second Law states F = ma. The unit of mass is...?", a:["Kg","N","J","W"], correct:0},
+    {q:"Kinetic energy of a body is given by...?", a:["½mv²","mv","mgh","mgv"], correct:0},
+    {q:"The area under a force-time graph gives...?", a:["Impulse","Work","Power","Energy"], correct:0},
+    {q:"If two bodies collide elastically, total kinetic energy after collision is...?", a:["Conserved","Lost","Transformed into heat","Zero"], correct:0},
+    {q:"The fundamental unit of length in SI is...?", a:["Meter","Centimeter","Foot","Inch"], correct:0},
+    {q:"Time is measured in which SI unit?", a:["Second","Minute","Hour","Day"], correct:0},
+    {q:"A quantity that has magnitude and direction is called...?", a:["Vector","Scalar","Tensor","Matrix"], correct:0},
+    {q:"Displacement differs from distance in that it...?", a:["Has direction","Has magnitude only","Is always positive","Is scalar"], correct:0},
+    {q:"Speed is a scalar quantity because it has...?", a:["Magnitude only","Direction only","Both magnitude and direction","Neither"], correct:0},
+    {q:"Instantaneous velocity is the velocity at a...?", a:["Specific instant","Distance","Average time","Total path"], correct:0},
+    {q:"Newton's Third Law states that every action has an equal and opposite...?", a:["Reaction","Force","Acceleration","Momentum"], correct:0},
+    {q:"Momentum is defined as the product of mass and...?", a:["Velocity","Acceleration","Force","Displacement"], correct:0},
+    {q:"In a two-body collision, total momentum is...?", a:["Conserved","Not conserved","Doubled","Reduced"], correct:0},
+    {q:"Potential energy of an object at height h is given by...?", a:["mgh","½mv²","mg","mv"], correct:0},
+    {q:"Power is the rate of doing...?", a:["Work","Force","Energy","Momentum"], correct:0},
+    {q:"Work done is zero when the force is...?", a:["Perpendicular to displacement","Parallel to displacement","Opposite to displacement","None"], correct:0},
+    {q:"Unit of linear momentum is...?", a:["Kg·m/s","Newton","Joule","Watt"], correct:0},
+    {q:"The speed of a particle is 10 m/s and moves for 5 s. Distance covered is...?", a:["50 m","15 m","5 m","100 m"], correct:0},
+    {q:"The slope of a velocity-time graph gives...?", a:["Acceleration","Displacement","Force","Momentum"], correct:0},
+    {q:"Acceleration due to gravity is approximately...?", a:["9.8 m/s²","10 m/s²","9.8 km/s²","9.8 cm/s²"], correct:0},
+    {q:"If net force on a body is zero, the body is in...?", a:["Equilibrium","Motion","Acceleration","Rotation"], correct:0},
+    {q:"Unit of work is...?", a:["Joule","Newton","Watt","Pascal"], correct:0},
+    {q:"Unit of energy is same as unit of...?", a:["Work","Power","Force","Momentum"], correct:0},
+    {q:"Instantaneous acceleration is the acceleration at a...?", a:["Particular instant","Average time","Distance","Velocity"], correct:0},
+    {q:"Scalar quantity examples include...?", a:["Speed, mass, temperature","Displacement, velocity","Force, acceleration","Momentum, velocity"], correct:0},
+    {q:"Vector quantities include...?", a:["Velocity, acceleration, displacement","Speed, mass","Energy, work","Time, distance"], correct:0},
+    {q:"Which of the following is NOT a vector quantity?", a:["Mass","Force","Displacement","Velocity"], correct:0},
+    {q:"The area under a velocity-time graph gives...?", a:["Displacement","Velocity","Acceleration","Force"], correct:0},
+    {q:"Newton's second law can also be written as...?", a:["F = dp/dt","F = mv²","F = W/t","F = mgh"], correct:0},
+    {q:"During a collision, the total kinetic energy is conserved in...?", a:["Elastic collision","Inelastic collision","Perfectly inelastic collision","Explosion"], correct:0},
+    {q:"In perfectly inelastic collision, the bodies...?", a:["Stick together","Bounce off","Separate after collision","Accelerate"], correct:0},
+    {q:"Impulse is equal to the change in...?", a:["Momentum","Force","Velocity","Energy"], correct:0},
+    {q:"Work done by a force is maximum when angle between force and displacement is...?", a:["0°","90°","180°","45°"], correct:0},
+    {q:"Unit of power is...?", a:["Watt","Joule","Newton","Pascal"], correct:0},
+    {q:"If two bodies move with equal velocities in opposite directions, total momentum is...?", a:["Zero","Positive","Negative","Non-zero"], correct:0},
+    {q:"Velocity of a body moving in a circle is directed...?", a:["Tangentially","Radially","Opposite to motion","At center"], correct:0},
+    {q:"Acceleration of a body moving in a circle is directed...?", a:["Towards the center","Tangentially","Opposite to velocity","Along displacement"], correct:0},
+    {q:"Work is a scalar because...?", a:["It has magnitude only","It has direction only","It has magnitude and direction","Neither"], correct:0},
+    {q:"The kinetic energy of a body is proportional to...?", a:["Square of velocity","Mass","Force","Displacement"], correct:0},
+    {q:"The potential energy depends on...?", a:["Height and mass","Velocity","Acceleration","Force"], correct:0},
+    {q:"Unit of momentum is same as...?", a:["Kg·m/s","Newton","Joule","Watt"], correct:0},
+    {q:"Time rate of change of momentum is equal to...?", a:["Force","Acceleration","Work","Energy"], correct:0},
+    {q:"Velocity of the center of mass remains constant if...?", a:["Net external force is zero","Mass is constant","Acceleration is zero","Momentum is zero"], correct:0},
+    {q:"Displacement vector can be added by...?", a:["Head-to-tail method","Multiplication","Subtraction","Division"], correct:0},
+    {q:"Scalar multiplication of vector changes...?", a:["Magnitude","Direction","Both","Neither"], correct:0},
+    {q:"Two vectors at right angles have resultant given by...?", a:["Pythagoras theorem","Sum of magnitudes","Difference of magnitudes","Product"], correct:0},
+    {q:"Work done in moving a charge in electric field depends on...?", a:["Potential difference","Velocity","Acceleration","Force"], correct:0},
+    {q:"Energy is conserved in which type of collision?", a:["Elastic","Inelastic","Perfectly inelastic","All collisions"], correct:0},
+    {q:"Impulse has units of...?", a:["Kg·m/s","Newton","Joule","Watt"], correct:0},
+    {q:"Common velocity after collision is used in...?", a:["Perfectly inelastic collision","Elastic collision","Explosion","Oscillation"], correct:0},
+    {q:"If net work done on a body is zero, its kinetic energy...?", a:["Remains constant","Increases","Decreases","Becomes zero"], correct:0},
+    {q:"Force acting along displacement does...?", a:["Work","No work","Negative work","Impulse"], correct:0},
+    {q:"Power can also be expressed as...?", a:["Force × velocity","Mass × acceleration","Energy × time","Momentum × velocity"], correct:0},
+    {q:"Dimension of force is...?", a:["MLT⁻²","ML²T⁻²","M²L²T⁻²","MLT⁻¹"], correct:0},
+    {q:"Unit of acceleration is...?", a:["m/s²","m/s","m²/s","m²/s²"], correct:0},
+    {q:"Distance covered by a body under uniform acceleration is given by...?", a:["s = ut + ½at²","v = u + at","F = ma","W = Fd"], correct:0},
+    {q:"Equation v² = u² + 2as represents...?", a:["Motion under constant acceleration","Impulse","Work","Power"], correct:0},
+    {q:"Newton's law of motion deals with...?", a:["Force and motion","Energy","Momentum","Work"], correct:0},
+    {q:"A body in equilibrium has...?", a:["Zero net force","Non-zero acceleration","Zero displacement","Zero velocity"], correct:0},
+    {q:"The angle between force and displacement is 90°, work done is...?", a:["Zero","Maximum","Negative","Minimum"], correct:0},
+    {q:"Kinetic energy of a moving object of mass m and velocity v is...?", a:["½mv²","mv","mgh","mgv"], correct:0},
+    {q:"Power is work done per unit...?", a:["Time","Distance","Velocity","Force"], correct:0},
+    {q:"Momentum is a...?", a:["Vector","Scalar","Tensor","Matrix"], correct:0},
+    {q:"Unit of work is equivalent to...?", a:["Newton-meter","Newton-second","Joule-second","Kg·m²/s²"], correct:0},
+    {q:"Energy lost in an inelastic collision is usually converted to...?", a:["Heat and sound","Momentum","Velocity","Force"], correct:0},
+    {q:"For uniform motion, acceleration is...?", a:["Zero","Positive","Negative","Variable"], correct:0},
+    {q:"Speed is a scalar because it has...?", a:["Magnitude only","Direction only","Both","Neither"], correct:0},
+    {q:"Velocity is a vector because it has...?", a:["Magnitude and direction","Magnitude only","Direction only","Neither"], correct:0},
+    {q:"Impulse experienced by a body equals...", a:["Change in momentum","Change in force","Change in acceleration","Change in energy"], correct:0},
+    {q:"The common velocity after a perfectly inelastic collision is determined using...?", a:["Conservation of momentum","Newton's second law","Work-energy theorem","Impulse formula"], correct:0},
+    {q:"A body in free fall has acceleration equal to...?", a:["g","0","v/t","2g"], correct:0},
+    {q:"Work done by gravity on a free-falling body is...?", a:["Positive","Negative","Zero","Depends"], correct:0},
+    {q:"Momentum and impulse have the same units?", a:["Yes","No","Sometimes","Never"], correct:0},
+    {q:"Energy has units of...", a:["Joule","Newton","Watt","Pascal"], correct:0},
+    {q:"Unit of pressure is...", a:["Pascal","Newton","Joule","Watt"], correct:0},
+    {q:"The area under a force-displacement graph gives...?", a:["Work done","Impulse","Energy","Momentum"], correct:0}
+],
+
+
+"PHY102: General Physics II":[
+    {q:"The SI unit of electric charge is?", a:["Ampere","Coulomb","Volt","Ohm"], correct:1},
+    {q:"Coulomb's law gives force between?", a:["Two wires","Two magnets","Two point charges","Two currents"], correct:2},
+    {q:"Electric field is defined as?", a:["Charge per unit force","Force per unit charge","Energy per charge","Voltage per charge"], correct:1},
+    {q:"Unit of electric field is?", a:["Volt","N/C","Coulomb","Ohm"], correct:1},
+    {q:"Potential difference is measured in?", a:["Ampere","Coulomb","Ohm","Volt"], correct:3},
+    {q:"Work done in moving a charge in an electric field is?", a:["qE","V/q","qV","E/q"], correct:2},
+    {q:"The field inside a conductor in electrostatic equilibrium is?", a:["Maximum","Zero","Infinite","Variable"], correct:1},
+    {q:"Electric potential is a?", a:["Vector","Tensor","Scalar","Matrix"], correct:2},
+    {q:"Two point charges attract each other if?", a:["Same signs","Opposite signs","Both zero","One is zero"], correct:1},
+    {q:"Unit of electric potential energy is?", a:["Volt","Ampere","Coulomb","Joule"], correct:3},
+
+    {q:"The SI unit of current is?", a:["Volt","Coulomb","Ampere","Ohm"], correct:2},
+    {q:"Ohm's law states that V = ?", a:["I/R","IR","R/I","I+R"], correct:1},
+    {q:"Resistance of a conductor depends on?", a:["Voltage only","Length, area and resistivity","Current only","Charge"], correct:1},
+    {q:"Unit of resistivity is?", a:["Ω","V/A","Ω·m","A/V"], correct:2},
+    {q:"Series combination of resistors has?", a:["Product/sum","Zero","1/R total rule","R₁ + R₂ + …"], correct:3},
+    {q:"Parallel combination of resistors has?", a:["R₁ + R₂","1/R total = 1/R₁ + 1/R₂","R₁ × R₂","Zero"], correct:1},
+    {q:"Current is?", a:["Voltage per charge","Energy per time","Flow of charge per unit time","Force per area"], correct:2},
+    {q:"Electrical power is given by?", a:["V/I","I/V","V + I","VI"], correct:3},
+    {q:"Kilowatt-hour is a unit of?", a:["Power","Energy","Charge","Current"], correct:1},
+    {q:"Internal resistance of a battery affects?", a:["Force","Terminal voltage","Acceleration","Magnetic field"], correct:1},
+
+    {q:"Unit of magnetic field (B) in SI is?", a:["Weber","Tesla","Ampere","Volt"], correct:1},
+    {q:"Magnetic force on a moving charge is?", a:["q(v · B)","qv/B","q(v × B)","q/Bv"], correct:2},
+    {q:"Direction of magnetic force is given by?", a:["Lenz’s law","Faraday’s law","Left-hand rule","Right-hand rule"], correct:3},
+    {q:"Magnetic flux is measured in?", a:["Tesla","Volt","Ampere","Weber"], correct:3},
+    {q:"Magnetic field inside a long solenoid is?", a:["μ₀I","μ₀nI","μ₀n/I","μ₀I/n"], correct:1},
+    {q:"Unit of magnetization is?", a:["Tesla","Weber","A/m","Volt"], correct:2},
+    {q:"Force between two parallel currents is?", a:["Always zero","Attractive if currents are same direction","Repulsive always","Depends on voltage"], correct:1},
+    {q:"Magnetic moment of a current loop is?", a:["I/A","A/I","IA","I²A"], correct:2},
+    {q:"Torque on a current loop is maximum when its plane is?", a:["Parallel to B","At 45°","At 30°","Perpendicular to B"], correct:3},
+    {q:"Magnetic field lines around a straight conductor are?", a:["Radial","Spiral","Straight","Circular"], correct:3},
+
+    {q:"Faraday’s law relates induced EMF to?", a:["Current","Resistance","Rate of change of magnetic flux","Voltage"], correct:2},
+    {q:"Lenz's law determines?", a:["Magnitude of charge","Direction of induced current","Voltage","Resistance"], correct:1},
+    {q:"Unit of inductance is?", a:["Weber","Henry","Tesla","Volt"], correct:1},
+    {q:"Self-inductance depends on?", a:["Current only","Time only","Voltage only","Number of turns, area and length"], correct:3},
+    {q:"Induced EMF opposes change in flux due to?", a:["Ampere’s law","Gauss’s law","Faraday’s law","Lenz’s law"], correct:3},
+    {q:"Mutual inductance occurs between?", a:["Two batteries","Two coils","A coil and resistor","A coil and battery"], correct:1},
+    {q:"Back EMF occurs in?", a:["Battery","Resistor","A coil when current changes","Conductor"], correct:2},
+    {q:"A transformer works on principle of?", a:["Ohm’s law","Electromagnetic induction","Coulomb’s law","Kirchhoff’s law"], correct:1},
+    {q:"EMF induced in a moving conductor is?", a:["B/lv","Blv","B+lv","Bv/l"], correct:1},
+    {q:"DC stands for?", a:["Differential Current","Dynamic Current","Displacement Current","Direct Current"], correct:3},
+
+    {q:"AC stands for?", a:["Absolute Current","Direct Current","Alternating Current","Applied Current"], correct:2},
+    {q:"RMS value of AC current is?", a:["I","2I","I√2","I/√2"], correct:3},
+    {q:"Impedance in AC circuit is?", a:["R+XL+XC","√(R² + (XL − XC)²)","R²+XL²+XC²","R−XL+XC"], correct:1},
+    {q:"Power in AC circuit is maximum when?", a:["Voltage leads current","Current leads voltage","90° phase difference","Voltage and current are in phase"], correct:3},
+    {q:"Phase difference in pure inductive circuit is?", a:["0°","45°","180°","90°"], correct:3},
+    {q:"Reactance of capacitor is?", a:["2πfC","RC","1/(2πfC)","L/C"], correct:2},
+    {q:"AC current lags voltage in?", a:["Capacitive circuit","Resistive circuit","Inductive circuit","Pure conductor"], correct:2},
+    {q:"Simple harmonic motion is?", a:["Uniform motion","Random motion","Circular motion","Oscillatory motion with restoring force ∝ displacement"], correct:3},
+    {q:"Maximum acceleration in SHM occurs at?", a:["Mean position","Extreme positions","Half amplitude","Zero displacement"], correct:1},
+    {q:"Velocity in SHM is maximum at?", a:["Mean position","Extreme positions","Amplitude","Zero displacement"], correct:0},
+
+    {q:"Sound is a?", a:["Electromagnetic wave","Transverse wave","Circular wave","Longitudinal wave"], correct:3},
+    {q:"Unit of frequency is?", a:["Meter","Second","Hertz","Watt"], correct:2},
+    {q:"Nodes are points of?", a:["Maximum displacement","Zero displacement","Maximum velocity","Maximum acceleration"], correct:1},
+    {q:"Doppler effect refers to change in?", a:["Amplitude","Speed","Wavelength only","Frequency due to relative motion"], correct:3},
+    {q:"Sound cannot travel in?", a:["Air","Water","Vacuum","Solids"], correct:2},
+    {q:"Reflection of light obeys?", a:["Snell’s law","Lens formula","Dispersion","Angle of incidence = angle of reflection"], correct:3},
+    {q:"Refraction occurs due to?", a:["Change in amplitude","Change in speed of light","Change in color","Change in polarization"], correct:1},
+    {q:"Total internal reflection occurs when?", a:["Angle < critical angle","Angle = 0","Any angle","Angle > critical angle"], correct:3},
+    {q:"Concave lens always forms?", a:["Real image","Inverted image","No image","Virtual, upright, smaller image"], correct:3},
+    {q:"Diffraction is significant when?", a:["λ << obstacle","λ ≈ obstacle size","λ >> obstacle","No relation"], correct:1}
+],
+
+
+"PHY103: Practical Physics I": [
+    { "q": "The least count of a vernier caliper is?", "a": ["1 mm", "0.5 mm", "0.01 mm", "0.1 mm"], "correct": 2 },
+    { "q": "A micrometer screw gauge measures?", "a": ["Large distances", "Small lengths with high accuracy", "Mass", "Time interval"], "correct": 1 },
+    { "q": "The main scale of a meter rule is in?", "a": ["Centimeters", "Meters only", "Inches", "Millimeters"], "correct": 0 },
+    { "q": "Least count of a screw gauge depends on?", "a": ["Length of screw", "Pitch and number of divisions on circular scale", "Diameter", "Weight"], "correct": 1 },
+    { "q": "The least count of an ammeter is?", "a": ["0.1 A", "1 A", "0.01 A", "Depends on range"], "correct": 3 },
+    { "q": "The unit of resistivity is?", "a": ["V/A", "Ω", "Ω·m", "A/V"], "correct": 2 },
+    { "q": "Digital multimeter can measure?", "a": ["Voltage, current, resistance", "Force", "Mass", "Length"], "correct": 0 },
+    { "q": "Stopwatch is used to measure?", "a": ["Length", "Time interval", "Current", "Voltage"], "correct": 1 },
+    { "q": "Pendulum bob is suspended to reduce?", "a": ["Gravity", "Mass", "Air resistance", "Tension"], "correct": 2 },
+    { "q": "Burette is used for?", "a": ["Measuring mass", "Time interval", "Current", "Measuring liquid volume accurately"], "correct": 3 },
+
+    { "q": "Systematic errors are?", "a": ["Consistent and reproducible", "Random and unpredictable", "Due to observation only", "Zero errors"], "correct": 0 },
+    { "q": "Random errors can be reduced by?", "a": ["Changing apparatus", "Repeating measurements", "Changing units", "Using formula"], "correct": 1 },
+    { "q": "Parallax error occurs due to?", "a": ["Wrong formula", "Faulty scale", "Incorrect eye position", "Using wrong units"], "correct": 2 },
+    { "q": "Instrumental errors arise from?", "a": ["Human observation", "Environment", "None", "Faulty apparatus"], "correct": 3 },
+    { "q": "Percentage error = ?", "a": ["True/Measured ×100", "(Measured - True)/True × 100", "Measured × True", "Measured - True"], "correct": 1 },
+    { "q": "Accuracy refers to?", "a": ["Closeness to true value", "Repeatability", "Precision", "Unit conversion"], "correct": 0 },
+    { "q": "Precision refers to?", "a": ["Closeness to true value", "Unit", "Repeatability of measurement", "Error"], "correct": 2 },
+    { "q": "Zero error occurs when?", "a": ["Scale does not read zero when pointer at zero", "Pointer moves randomly", "Time is misread", "Length mismeasured"], "correct": 0 },
+    { "q": "Combining errors of quantities, fractional errors are?", "a": ["Subtracted", "Added for multiplication/division", "Multiplied", "Ignored"], "correct": 1 },
+    { "q": "Absolute error is?", "a": ["Percentage error", "Fractional error", "Square root of error", "Measured value - true value"], "correct": 3 },
+
+    { "q": "Slope of a displacement-time graph gives?", "a": ["Acceleration", "Force", "Velocity", "Distance"], "correct": 2 },
+    { "q": "Area under velocity-time graph gives?", "a": ["Acceleration", "Displacement", "Distance", "Speed"], "correct": 1 },
+    { "q": "Slope of velocity-time graph gives?", "a": ["Velocity", "Distance", "Force", "Acceleration"], "correct": 3 },
+    { "q": "Hooke’s law graph is a plot of?", "a": ["Force vs extension", "Mass vs acceleration", "Time vs displacement", "Voltage vs current"], "correct": 0 },
+    { "q": "The slope of F-x graph gives?", "a": ["Force", "Mass", "Spring constant k", "Acceleration"], "correct": 2 },
+    { "q": "Periodic graph of SHM is?", "a": ["Linear", "Sinusoidal", "Exponential", "Random"], "correct": 1 },
+    { "q": "In a PV graph of gas, area under curve gives?", "a": ["Pressure", "Volume", "Temperature", "Work done"], "correct": 3 },
+    { "q": "Graphical method can be used to determine?", "a": ["Time only", "Length only", "Experimental constants", "Mass only"], "correct": 2 },
+    { "q": "Best-fit line is drawn to?", "a": ["Maximize slope", "Maximize error", "Minimize effect of random errors", "Ignore data"], "correct": 2 },
+    { "q": "Intercept of a graph gives?", "a": ["Slope", "Initial value", "Acceleration", "Frequency"], "correct": 1 },
+
+    { "q": "Oscillation period of a pendulum depends on?", "a": ["Mass", "Amplitude only", "Length and gravity", "Air density"], "correct": 2 },
+    { "q": "Mass of an object can be measured using?", "a": ["Stopwatch", "Beam balance", "Voltmeter", "Ammeter"], "correct": 1 },
+    { "q": "Acceleration due to gravity g can be determined using?", "a": ["Spring experiment", "Pendulum experiment", "Resistor", "Burette"], "correct": 1 },
+    { "q": "Spring constant k is determined by?", "a": ["Mass vs time graph", "Voltage vs current graph", "Force vs extension graph", "Displacement vs time"], "correct": 2 },
+    { "q": "Velocity of a rolling ball can be measured using?", "a": ["Micrometer", "Ticker-timer", "Vernier caliper", "Meter rule"], "correct": 1 },
+    { "q": "Friction experiment involves?", "a": ["Voltage vs current", "Force vs normal reaction", "Mass vs weight", "Length vs time"], "correct": 1 },
+    { "q": "Work done in stretching a spring is?", "a": ["Slope", "Intercept", "Area under F-x graph", "Time"], "correct": 2 },
+    { "q": "Moment of inertia can be measured using?", "a": ["Oscilloscope", "Torsion pendulum", "Voltmeter", "Ammeter"], "correct": 1 },
+    { "q": "Centripetal force can be determined from?", "a": ["Mass, radius, angular velocity", "Voltage, current", "Time, distance", "Weight, height"], "correct": 0 },
+    { "q": "Projectile motion experiment measures?", "a": ["Velocity only", "Range and time of flight", "Acceleration only", "Mass"], "correct": 1 },
+
+    { "q": "Ohm’s law can be verified by plotting?", "a": ["V-I graph", "Resistance-Time graph", "I-V graph", "Voltage-Time graph"], "correct": 2 },
+    { "q": "Internal resistance of a battery can be determined using?", "a": ["Micrometer", "Calorimeter", "Beam balance", "V-I characteristics"], "correct": 3 },
+    { "q": "Kirchhoff’s laws can be verified by?", "a": ["Mass measurement", "Time measurement", "Current and voltage measurements", "Length measurement"], "correct": 2 },
+    { "q": "Capacitance of a capacitor can be measured by?", "a": ["Stopwatch", "RC circuit method", "Pendulum", "Meter rule"], "correct": 1 },
+    { "q": "Magnetic field of a solenoid can be determined using?", "a": ["Voltmeter", "Ammeter", "Gauss meter", "Stopwatch"], "correct": 2 },
+    { "q": "Current in a circuit is measured using?", "a": ["Ammeter", "Voltmeter", "Multimeter", "Galvanometer"], "correct": 0 },
+    { "q": "Voltage across resistor is measured using?", "a": ["Voltmeter", "Ammeter", "Stopwatch", "Micrometer"], "correct": 0 },
+    { "q": "Resistance of wire can be determined by?", "a": ["Length measurement", "Mass measurement", "V-I graph", "Time measurement"], "correct": 2 },
+    { "q": "Series and parallel combination of resistors can be verified by?", "a": ["Time only", "Current and voltage measurements", "Length only", "Mass only"], "correct": 1 },
+    { "q": "Electrostatic charge can be detected using?", "a": ["Voltmeter", "Gold leaf electroscope", "Ammeter", "Stopwatch"], "correct": 1 },
+
+    { "q": "Frequency of a tuning fork can be determined by?", "a": ["Resonance tube", "Stopwatch", "Meter rule", "Voltmeter"], "correct": 0 },
+    { "q": "Speed of sound in air can be measured using?", "a": ["Pendulum", "Stopwatch", "Resonance tube", "Voltmeter"], "correct": 2 },
+    { "q": "Wavelength of sound can be determined using?", "a": ["Resonance tube", "Micrometer", "Vernier caliper", "Ammeter"], "correct": 0 },
+    { "q": "Time period of oscillation can be measured using?", "a": ["Voltmeter", "Ammeter", "Stopwatch", "Galvanometer"], "correct": 2 },
+    { "q": "Nodes and antinodes in a standing wave can be observed using?", "a": ["Pendulum", "Loudspeaker and resonance tube", "Voltmeter", "Stopwatch"], "correct": 1 },
+    { "q": "Velocity of transverse waves on string depends on?", "a": ["Mass only", "Length only", "Amplitude only", "Tension and linear density"], "correct": 3 },
+    { "q": "Frequency of oscillating system is independent of?", "a": ["Mass", "Amplitude for small oscillations", "Length", "Gravity"], "correct": 1 },
+    { "q": "Damping of oscillations can be studied by?", "a": ["Measuring voltage", "Measuring current", "Observing amplitude decay", "Measuring mass"], "correct": 2 },
+    { "q": "Resonance occurs when?", "a": ["Driving frequency is zero", "Amplitude is zero", "Driving frequency equals natural frequency", "Velocity is zero"], "correct": 2 },
+    { "q": "Superposition of waves can be demonstrated using?", "a": ["Ripple tank", "Pendulum", "Stopwatch", "Voltmeter"], "correct": 0 },
+
+    { "q": "Calibration of an instrument ensures?", "a": ["Random error", "Accuracy of readings", "Graph slope", "Frequency measurement"], "correct": 1 },
+    { "q": "Parallax error can be avoided by?", "a": ["Random reading", "Changing scale", "Positioning eye perpendicular to scale", "Adjusting current"], "correct": 2 },
+    { "q": "Vernier caliper is more accurate than meter rule because?", "a": ["Smaller least count", "Larger scale", "Digital reading", "Time measurement"], "correct": 0 },
+    { "q": "Micrometer screw gauge is used for?", "a": ["Voltage measurement", "Current measurement", "Measuring small lengths", "Time measurement"], "correct": 2 },
+    { "q": "Repeated measurements improve?", "a": ["Precision", "Accuracy", "Error", "Mass"], "correct": 1 },
+    { "q": "Graphical method helps in?", "a": ["Voltage measurement", "Determining experimental constants", "Time measurement", "Length measurement"], "correct": 1 },
+    { "q": "Error due to friction in experiment is?", "a": ["Systematic error", "Random error", "Zero error", "Instrumental error"], "correct": 0 },
+    { "q": "Least count error can be reduced by?", "a": ["Changing units", "Using better instrument", "Changing formula", "Using more current"], "correct": 1 },
+    { "q": "Digital instruments are preferred because?", "a": ["More colorful", "Cheaper", "Reduce parallax and human error", "Larger"], "correct": 2 },
+    { "q": "Experimental result should always include?", "a": ["Value and uncertainty", "Value only", "Units only", "Graph only"], "correct": 0 }
+  ],
+  
+  
+  
+  
+  
+
+"CHM101: General Chemistry I": [
+    { "q": "Which subatomic particle has the least mass?", "a": ["Proton", "Neutron", "Electron", "Alpha particle"], "correct": 2 },
+    { "q": "The oxidation state of Manganese in KMnO4 is?", "a": ["+5", "+7", "+6", "+4"], "correct": 1 },
+    { "q": "Boyle's Law states that at constant temperature, Volume is?", "a": ["Directly proportional to Pressure", "Inversely proportional to Pressure", "Equal to Pressure", "Independent of Pressure"], "correct": 1 },
+    { "q": "What is the shape of a CH4 molecule according to VSEPR theory?", "a": ["Tetrahedral", "Square Planar", "Pyramidal", "Linear"], "correct": 0 },
+    { "q": "An orbital with quantum numbers n=3, l=2 is designated as?", "a": ["3p", "3s", "3d", "4d"], "correct": 2 },
+    { "q": "Which of the following is an intensive property?", "a": ["Mass", "Density", "Volume", "Enthalpy"], "correct": 1 },
+    { "q": "How many moles are in 500 mL of a 2.0 M solution?", "a": ["1.0 mole", "4.0 moles", "0.5 moles", "2.0 moles"], "correct": 0 },
+    { "q": "Which element has the highest electronegativity?", "a": ["Oxygen", "Chlorine", "Cesium", "Fluorine"], "correct": 3 },
+    { "q": "What is the conjugate base of NH4+?", "a": ["NH3", "NH2-", "OH-", "H3O+"], "correct": 0 },
+    { "q": "Which bond involves the complete transfer of electrons?", "a": ["Covalent", "Metallic", "Ionic", "Hydrogen"], "correct": 2 },
+
+    { "q": "The Uncertainty Principle was proposed by?", "a": ["Schrödinger", "Heisenberg", "Bohr", "Dalton"], "correct": 1 },
+    { "q": "What is the molar mass of CaCO3? (Ca=40, C=12, O=16)", "a": ["68 g/mol", "84 g/mol", "100 g/mol", "52 g/mol"], "correct": 2 },
+    { "q": "An exothermic reaction is one where?", "a": ["Heat is absorbed", "Enthalpy change is positive", "Heat is released", "Temperature decreases"], "correct": 2 },
+    { "q": "Which quantum number determines the orientation of an orbital?", "a": ["Principal (n)", "Azimuthal (l)", "Magnetic (ml)", "Spin (ms)"], "correct": 2 },
+    { "q": "The empirical formula of Benzene (C6H6) is?", "a": ["CH", "C2H2", "C3H3", "C6H6"], "correct": 0 },
+    { "q": "A buffer solution is designed to?", "a": ["Increase pH", "Decrease pH", "Resist changes in pH", "Neutralize all acids"], "correct": 2 },
+    { "q": "Which of these is a noble gas?", "a": ["Nitrogen", "Argon", "Oxygen", "Fluorine"], "correct": 1 },
+    { "q": "The bond angle in a water molecule (H2O) is approximately?", "a": ["180°", "120°", "109.5°", "104.5°"], "correct": 3 },
+    { "q": "Which law states that energy cannot be created or destroyed?", "a": ["First Law of Thermodynamics", "Second Law of Thermodynamics", "Hess's Law", "Le Chatelier's Principle"], "correct": 0 },
+    { "q": "The process of a solid turning directly into a gas is?", "a": ["Evaporation", "Sublimation", "Condensation", "Deposition"], "correct": 1 },
+
+    { "q": "Which of the following has the highest ionization energy?", "a": ["Sodium", "Magnesium", "Helium", "Potassium"], "correct": 2 },
+    { "q": "What is the pH of a 0.001 M HCl solution?", "a": ["1", "2", "3", "4"], "correct": 2 },
+    { "q": "Hybridization of Carbon in Ethyne (C2H2) is?", "a": ["sp", "sp2", "sp3", "dsp2"], "correct": 0 },
+    { "q": "The solubility of gases in liquids generally decreases with?", "a": ["Increased pressure", "Decreased temperature", "Increased temperature", "Agitation"], "correct": 2 },
+    { "q": "Which is an example of a coordinate covalent bond?", "a": ["H2", "NaCl", "NH4+", "CH4"], "correct": 2 },
+    { "q": "The standard enthalpy of formation of an element in its standard state is?", "a": ["1 kJ/mol", "0 kJ/mol", "-1 kJ/mol", "100 kJ/mol"], "correct": 1 },
+    { "q": "What is the maximum number of electrons in the p-subshell?", "a": ["2", "6", "10", "14"], "correct": 1 },
+    { "q": "An oxidizing agent is a substance that?", "a": ["Loses electrons", "Gains electrons", "Increases in oxidation number", "Is reduced"], "correct": 1 },
+    { "q": "Which radioactive particle is identical to a Helium nucleus?", "a": ["Beta", "Gamma", "Alpha", "Positron"], "correct": 2 },
+    { "q": "The bond between two non-metals is usually?", "a": ["Ionic", "Metallic", "Covalent", "Electrostatic"], "correct": 2 },
+
+    { "q": "What is the mass of one mole of Nitrogen gas (N2)? (N=14)", "a": ["14 g", "28 g", "7 g", "42 g"], "correct": 1 },
+    { "q": "Which principle states electrons fill lowest energy orbitals first?", "a": ["Hund's Rule", "Pauli Exclusion Principle", "Aufbau Principle", "Le Chatelier"], "correct": 2 },
+    { "q": "A reaction where the rate depends on concentration is?", "a": ["Zero order", "First order", "Spontaneous", "Equilibrium"], "correct": 1 },
+    { "q": "Which transition metal is liquid at room temperature?", "a": ["Silver", "Iron", "Mercury", "Gold"], "correct": 2 },
+    { "q": "The pressure of a gas is caused by?", "a": ["Intermolecular attraction", "Collisions with container walls", "Gravity", "Atomic size"], "correct": 1 },
+    { "q": "What defines an isotope?", "a": ["Same protons, different neutrons", "Same neutrons, different protons", "Same mass, different protons", "Different electrons"], "correct": 0 },
+    { "q": "Which of these represents an ideal gas equation?", "a": ["PV=nRT", "P1V1=P2V2", "V/T=k", "P=F/A"], "correct": 0 },
+    { "q": "The SI unit of Temperature is?", "a": ["Celsius", "Fahrenheit", "Kelvin", "Joule"], "correct": 2 },
+    { "q": "Which type of bond is found in Diamond?", "a": ["Ionic", "Metallic", "Network Covalent", "Van der Waals"], "correct": 2 },
+    { "q": "What is the molarity of a solution with 5.85g NaCl in 1L? (Na=23, Cl=35.5)", "a": ["1.0 M", "0.1 M", "0.5 M", "2.0 M"], "correct": 1 },
+
+    { "q": "A catalyst increases reaction rate by?", "a": ["Increasing temperature", "Lowering activation energy", "Increasing pressure", "Changing enthalpy"], "correct": 1 },
+    { "q": "Electronegativity increases across a period because of?", "a": ["Increased atomic radius", "Decreased nuclear charge", "Increased nuclear charge", "Shielding effect"], "correct": 2 },
+    { "q": "Which of these is a strong acid?", "a": ["CH3COOH", "H2CO3", "H2SO4", "H3PO4"], "correct": 2 },
+    { "q": "The geometry of NH3 (ammonia) is?", "a": ["Tetrahedral", "Trigonal Planar", "Trigonal Pyramidal", "Linear"], "correct": 2 },
+    { "q": "What is the sum of mole fractions in a mixture?", "a": ["0", "1", "100", "Depends on components"], "correct": 1 },
+    { "q": "According to Bronsted-Lowry, a base is a?", "a": ["Proton donor", "Proton acceptor", "Electron donor", "Electron acceptor"], "correct": 1 },
+    { "q": "The most abundant gas in the atmosphere is?", "a": ["Oxygen", "Carbon dioxide", "Nitrogen", "Hydrogen"], "correct": 2 },
+    { "q": "Water is a polar molecule because?", "a": ["It contains ions", "It has a linear shape", "Electronegativity difference and bent shape", "It is organic"], "correct": 2 },
+    { "q": "Which functional group is found in alcohols?", "a": ["-CHO", "-COOH", "-OH", "-CO-"], "correct": 2 },
+    { "q": "What is the value of Avogadro's constant?", "a": ["6.02 x 10^23", "3.00 x 10^8", "1.60 x 10^-19", "9.81"], "correct": 0 },
+
+    { "q": "Hard water contains high concentrations of?", "a": ["Sodium and Potassium", "Calcium and Magnesium", "Iron and Copper", "Chlorine and Fluorine"], "correct": 1 },
+    { "q": "A reaction with a negative Gibbs free energy (ΔG) is?", "a": ["Non-spontaneous", "At equilibrium", "Spontaneous", "Endothermic"], "correct": 2 },
+    { "q": "Which series of lines appears in the visible region of Hydrogen spectrum?", "a": ["Lyman", "Balmer", "Paschen", "Brackett"], "correct": 1 },
+    { "q": "The formula for rust is?", "a": ["FeO", "Fe3O4", "Fe2O3.xH2O", "Fe(OH)2"], "correct": 2 },
+    { "q": "Which law relates the solubility of a gas to its partial pressure?", "a": ["Raoult's Law", "Henry's Law", "Dalton's Law", "Charles's Law"], "correct": 1 },
+    { "q": "What is the hybridization of Carbon in Benzene?", "a": ["sp", "sp2", "sp3", "sp3d"], "correct": 1 },
+    { "q": "An aqueous solution with pH 7 is?", "a": ["Acidic", "Basic", "Neutral", "Amphoteric"], "correct": 2 },
+    { "q": "The charge of an electron is approximately?", "a": ["+1.6 x 10^-19 C", "-1.6 x 10^-19 C", "0 C", "-1.0 C"], "correct": 1 },
+    { "q": "Which halogen is a solid at room temperature?", "a": ["Fluorine", "Chlorine", "Bromine", "Iodine"], "correct": 3 },
+    { "q": "Le Chatelier's Principle applies to?", "a": ["Irreversible reactions", "Systems at equilibrium", "Gases only", "Solids only"], "correct": 1 },
+
+    { "q": "Cathode rays consist of?", "a": ["Protons", "Neutrons", "Electrons", "Photons"], "correct": 2 },
+    { "q": "Which bond is the strongest?", "a": ["Single bond", "Double bond", "Triple bond", "Hydrogen bond"], "correct": 2 },
+    { "q": "Molar volume of a gas at STP is?", "a": ["2.24 L", "22.4 L", "224 L", "11.2 L"], "correct": 1 },
+    { "q": "Reduction involves?", "a": ["Loss of oxygen", "Gain of oxygen", "Loss of hydrogen", "Loss of electrons"], "correct": 0 },
+    { "q": "A substance that can act as both acid and base is?", "a": ["Amphiprotic", "Aprotic", "Neutral", "Monoprotic"], "correct": 0 },
+    { "q": "Which is an alkali metal?", "a": ["Calcium", "Lithium", "Aluminum", "Zinc"], "correct": 1 },
+    { "q": "Percentage by mass of Hydrogen in H2O is approx?", "a": ["11%", "89%", "50%", "2%"], "correct": 0 },
+    { "q": "Dalton's Law deals with?", "a": ["Total pressure of gas mixtures", "Volume of gases", "Temperature of gases", "Diffusion of gases"], "correct": 0 },
+    { "q": "The escape of gas through a tiny hole is called?", "a": ["Diffusion", "Effusion", "Evaporation", "Convection"], "correct": 1 },
+    { "q": "Titration is used to determine?", "a": ["Mass", "Density", "Concentration", "Boiling point"], "correct": 2 }
+  ],
+
+
+"CHM102: General Chemistry II": [
+    { "q": "The general formula for alkanes is?", "a": ["CnH2n", "CnH2n-2", "CnH2n+2", "CnHn"], "correct": 2 },
+    { "q": "Which functional group is characteristic of carboxylic acids?", "a": ["-OH", "-CHO", "-COOH", "-CO-"], "correct": 2 },
+    { "q": "The reaction between an alcohol and an organic acid to form an ester is called?", "a": ["Saponification", "Esterification", "Hydrolysis", "Hydrogenation"], "correct": 1 },
+    { "q": "Which of these is a saturated hydrocarbon?", "a": ["Ethyne", "Ethene", "Ethane", "Benzene"], "correct": 2 },
+    { "q": "The IUPAC name for CH3CH2CH2OH is?", "a": ["Propan-1-ol", "Propan-2-ol", "Ethanol", "Butanol"], "correct": 0 },
+    { "q": "Which type of isomerism is shown by But-1-ene and But-2-ene?", "a": ["Chain isomerism", "Functional isomerism", "Position isomerism", "Optical isomerism"], "correct": 2 },
+    { "q": "The process of breaking down large hydrocarbon molecules into smaller ones is?", "a": ["Polymerization", "Cracking", "Fermentation", "Isomerization"], "correct": 1 },
+    { "q": "Which reagent is used to test for unsaturation in alkenes?", "a": ["Benedict's solution", "Bromine water", "Fehling's solution", "Tollen's reagent"], "correct": 1 },
+    { "q": "The geometry around a carbon atom in an alkane is?", "a": ["Planar", "Linear", "Tetrahedral", "Octahedral"], "correct": 2 },
+    { "q": "What is the hybridisation of carbon in ethene?", "a": ["sp", "sp2", "sp3", "dsp2"], "correct": 1 },
+
+    { "q": "Which of these is an aromatic hydrocarbon?", "a": ["Cyclohexane", "Hexene", "Benzene", "Hexane"], "correct": 2 },
+    { "q": "The oxidation of a primary alcohol yields?", "a": ["Ketone", "Aldehyde", "Ether", "Alkane"], "correct": 1 },
+    { "q": "Which catalyst is commonly used in the hydrogenation of oils?", "a": ["Iron", "Platinum", "Nickel", "Copper"], "correct": 2 },
+    { "q": "What is the common name for trichloromethane?", "a": ["Iodoform", "Chloroform", "Carbon tetrachloride", "Freon"], "correct": 1 },
+    { "q": "The simplest member of the alkyne series is?", "a": ["Methane", "Ethene", "Ethyne", "Propyne"], "correct": 2 },
+    { "q": "Which gas is produced when calcium carbide reacts with water?", "a": ["Methane", "Oxygen", "Ethyne", "Hydrogen"], "correct": 2 },
+    { "q": "An organic compound that turns blue litmus red is likely an?", "a": ["Alkane", "Alkanol", "Alkanoic acid", "Alkanal"], "correct": 2 },
+    { "q": "Saponification is the alkaline hydrolysis of?", "a": ["Proteins", "Carbohydrates", "Fats and oils", "Polymers"], "correct": 2 },
+    { "q": "Which of these is a dicarboxylic acid?", "a": ["Acetic acid", "Methanoic acid", "Ethanedioic acid", "Propanoic acid"], "correct": 2 },
+    { "q": "The primary component of natural gas is?", "a": ["Butane", "Propane", "Methane", "Ethane"], "correct": 2 },
+
+    { "q": "Which functional group identifies an Alkanal?", "a": ["-OH", "-COOH", "-CHO", "-NH2"], "correct": 2 },
+    { "q": "A reaction where an atom is replaced by another atom is?", "a": ["Addition", "Elimination", "Substitution", "Rearrangement"], "correct": 2 },
+    { "q": "Which of these will give a positive silver mirror test?", "a": ["Propanone", "Ethanal", "Ethanol", "Ethyl ethanoate"], "correct": 1 },
+    { "q": "The dehydration of ethanol with excess conc. H2SO4 at 170°C produces?", "a": ["Ethane", "Ethoxyethane", "Ethene", "Ethanal"], "correct": 2 },
+    { "q": "Alcohols react with sodium metal to evolve?", "a": ["Oxygen", "Carbon dioxide", "Hydrogen", "Nitrogen"], "correct": 2 },
+    { "q": "Which isomerism occurs in compounds with the same molecular formula but different functional groups?", "a": ["Geometrical", "Functional", "Chain", "Position"], "correct": 1 },
+    { "q": "Optical isomerism is associated with the presence of?", "a": ["Double bonds", "Chiral carbon atom", "Triple bonds", "Ring structure"], "correct": 1 },
+    { "q": "Vinegar contains which organic acid?", "a": ["Methanoic acid", "Ethanoic acid", "Citric acid", "Lactic acid"], "correct": 1 },
+    { "q": "The functional group in ethers is?", "a": ["-CO-", "-O-", "-COO-", "-OH"], "correct": 1 },
+    { "q": "Which of the following is a secondary alcohol?", "a": ["Methanol", "Ethanol", "Propan-2-ol", "2-methylpropan-2-ol"], "correct": 2 },
+
+    { "q": "Benzene reacts with chlorine in the presence of FeCl3 to give?", "a": ["Hexachlorocyclohexane", "Chlorobenzene", "Benzyl chloride", "Dichlorobenzene"], "correct": 1 },
+    { "q": "The monomer of natural rubber is?", "a": ["Ethene", "Isoprene", "Styrene", "Butadiene"], "correct": 1 },
+    { "q": "Which carbohydrate is a non-reducing sugar?", "a": ["Glucose", "Fructose", "Sucrose", "Maltose"], "correct": 2 },
+    { "q": "The test for proteins using conc. HNO3 is called?", "a": ["Biuret test", "Xanthoproteic test", "Millon's test", "Molisch's test"], "correct": 1 },
+    { "q": "In an SN2 reaction, the '2' stands for?", "a": ["Two steps", "Bimolecular", "Secondary carbon", "Two products"], "correct": 1 },
+    { "q": "Which rule predicts the major product in the addition of HX to an unsymmetrical alkene?", "a": ["Hund's rule", "Markovnikov's rule", "Saytzeff's rule", "Hess's law"], "correct": 1 },
+    { "q": "The bond angle in Benzene is?", "a": ["109.5°", "180°", "120°", "90°"], "correct": 2 },
+    { "q": "Primary amines react with nitrous acid to produce?", "a": ["Nitroalkanes", "Alcohols and Nitrogen gas", "Ammonia", "Cyanides"], "correct": 1 },
+    { "q": "Which of these is a synthetic polymer?", "a": ["Cellulose", "Nylon", "Starch", "Glycogen"], "correct": 1 },
+    { "q": "The boiling points of alcohols are higher than alkanes of similar mass due to?", "a": ["Ionic bonds", "Covalent bonds", "Hydrogen bonding", "Van der Waals forces"], "correct": 2 },
+
+    { "q": "Chemical kinetics deals with the?", "a": ["Feasibility of a reaction", "Rate of a reaction", "Extent of a reaction", "Heat of a reaction"], "correct": 1 },
+    { "q": "The unit of rate constant for a first-order reaction is?", "a": ["mol dm-3 s-1", "dm3 mol-1 s-1", "s-1", "mol2 dm-6 s-1"], "correct": 2 },
+    { "q": "What is the effect of a catalyst on the equilibrium position?", "a": ["Shifts it to the right", "Shifts it to the left", "No effect", "Increases yield"], "correct": 2 },
+    { "q": "According to Le Chatelier’s principle, increasing pressure on the reaction N2 + 3H2 ⇌ 2NH3 will?", "a": ["Increase NH3 yield", "Decrease NH3 yield", "Have no effect", "Stop the reaction"], "correct": 0 },
+    { "q": "The pH of a buffer solution remains constant because it?", "a": ["Is neutral", "Contains a large amount of water", "Contains both acidic and basic components", "Is a strong acid"], "correct": 2 },
+    { "q": "For a spontaneous reaction at constant T and P, ΔG must be?", "a": ["Positive", "Zero", "Negative", "Infinite"], "correct": 2 },
+    { "q": "An enzyme is a/an?", "a": ["Inorganic catalyst", "Biological catalyst", "Reactant", "Product"], "correct": 1 },
+    { "q": "The half-life of a first-order reaction is?", "a": ["Dependent on initial concentration", "Independent of initial concentration", "Zero", "Always 10 minutes"], "correct": 1 },
+    { "q": "The equilibrium constant Kc for A + B ⇌ C is?", "a": ["[A][B]/[C]", "[C]/[A][B]", "[A]/[B][C]", "[C]/[A]"], "correct": 1 },
+    { "q": "Collision theory states that for a reaction to occur, particles must?", "a": ["Just touch", "Collide with sufficient energy and orientation", "Be in the gas phase", "Be at 0°C"], "correct": 1 },
+
+    { "q": "Which of these factors does NOT affect the rate of a chemical reaction?", "a": ["Temperature", "Concentration", "Pressure (for gases)", "Enthalpy of reaction"], "correct": 3 },
+    { "q": "The minimum energy required for a reaction to occur is?", "a": ["Kinetic energy", "Potential energy", "Activation energy", "Free energy"], "correct": 2 },
+    { "q": "An endothermic reaction is favored by?", "a": ["Decrease in temperature", "Increase in temperature", "Constant temperature", "None"], "correct": 1 },
+    { "q": "In a zero-order reaction, the rate is?", "a": ["Proportional to [A]", "Proportional to [A]^2", "Independent of [A]", "Inversely proportional to [A]"], "correct": 2 },
+    { "q": "The pH of a 0.01 M NaOH solution is?", "a": ["2", "7", "12", "14"], "correct": 2 },
+    { "q": "Kw, the ionic product of water at 25°C, is?", "a": ["1.0 x 10^-7", "1.0 x 10^-14", "7.0", "14.0"], "correct": 1 },
+    { "q": "Which is a strong electrolyte?", "a": ["Glucose", "Acetic acid", "Sodium chloride", "Pure water"], "correct": 2 },
+    { "q": "The Arrhenius equation relates the rate constant with?", "a": ["Pressure", "Temperature", "Volume", "Mass"], "correct": 1 },
+    { "q": "A Lewis acid is an?", "a": ["Electron pair donor", "Electron pair acceptor", "Proton donor", "Proton acceptor"], "correct": 1 },
+    { "q": "The pOH of a solution with pH 4 is?", "a": ["4", "7", "10", "14"], "correct": 2 },
+
+    { "q": "The functional group in Nitroalkanes is?", "a": ["-NH2", "-NO2", "-CN", "-CONH2"], "correct": 1 },
+    { "q": "Fehling's test is used to distinguish between?", "a": ["Alcohol and Acid", "Aldehyde and Ketone", "Alkane and Alkene", "Benzene and Toluene"], "correct": 1 },
+    { "q": "The hydrolysis of an ester in acidic medium gives?", "a": ["Salt and Alcohol", "Acid and Alcohol", "Alkane and Water", "Ether"], "correct": 1 },
+    { "q": "Which of the following is a tertiary amine?", "a": ["CH3NH2", "(CH3)2NH", "(CH3)3N", "C6H5NH2"], "correct": 2 },
+    { "q": "The simplest amino acid is?", "a": ["Alanine", "Valine", "Glycine", "Leucine"], "correct": 2 },
+    { "q": "What is the functional group of a nitrile?", "a": ["-NH2", "-NO2", "-CN", "-NC"], "correct": 2 },
+    { "q": "Geometric isomerism (cis-trans) is possible in?", "a": ["Ethane", "Ethene", "But-2-ene", "Propene"], "correct": 2 },
+    { "q": "Which of these describes a nucleophile?", "a": ["Electron deficient", "Electron rich", "Positively charged", "Lewis acid"], "correct": 1 },
+    { "q": "The reaction of an alkyl halide with aqueous KOH gives?", "a": ["Alkene", "Alcohol", "Ether", "Alkane"], "correct": 1 },
+    { "q": "Organic chemistry is primarily the study of?", "a": ["Metals", "Carbon compounds", "Rocks", "Gases"], "correct": 1 }
+  ],
+
+
+"CHM107: Practical Chemistry I":[
+  {q:"Which quantum number has the greatest influence on orbital energy in multi-electron atoms?", a:["Principal","Azimuthal","Magnetic","Spin"], correct:1},
+  {q:"When a catalyst is added to a reaction, the enthalpy change?", a:["Increases","Decreases","Becomes zero","Remains unchanged"], correct:3},
+  {q:"Which statement best explains why helium is chemically inert?", a:["Large atomic size","High electronegativity","Complete outer shell","Low ionization energy"], correct:2},
+  {q:"The electron configuration of Na⁺ is similar to which element?", a:["Neon","Magnesium","Argon","Fluorine"], correct:0},
+  {q:"Which intermolecular force exists in all molecules?", a:["Hydrogen bonding","Dipole-dipole","Ion-dipole","London dispersion"], correct:3},
+  {q:"The value of ΔH for a reaction depends on?", a:["Reaction pathway","Catalyst used","Initial and final states","Rate of reaction"], correct:2},
+  {q:"Which gas law correction accounts for molecular volume?", a:["Pressure correction","Temperature correction","Volume correction","Compressibility factor"], correct:2},
+  {q:"Which orbital penetration is greatest?", a:["3p","2p","2s","3s"], correct:2},
+  {q:"A reaction with ΔH < 0 and ΔS < 0 is spontaneous when?", a:["At all temperatures","At high temperatures","At low temperatures","Never spontaneous"], correct:2},
+  {q:"Which element shows the greatest metallic character?", a:["Na","Mg","Al","Si"], correct:0},
+  {q:"The boiling point of a liquid increases when?", a:["Vapor pressure increases","Intermolecular forces weaken","External pressure increases","Temperature decreases"], correct:2},
+  {q:"Which condition gives the lowest rate of gas diffusion?", a:["Low molar mass","High temperature","High molar mass","Low density"], correct:2},
+  {q:"Which bond involves overlapping of hybrid orbitals only?", a:["Sigma bond","Pi bond","Hydrogen bond","Ionic bond"], correct:0},
+  {q:"The first law of thermodynamics is a statement of conservation of?", a:["Mass","Energy","Momentum","Entropy"], correct:1},
+  {q:"Which statement about real gases is correct?", a:["They obey ideal gas law always","They have negligible volume","They deviate at low pressure","They deviate at high pressure"], correct:3},
+  {q:"Which electronic transition releases the highest energy photon?", a:["n=2 to n=1","n=3 to n=2","n=4 to n=3","n=5 to n=4"], correct:0},
+  {q:"Which factor increases ionization energy down a group?", a:["Increased shielding","Decreased atomic radius","Increased nuclear charge","None"], correct:3},
+  {q:"The molar volume of an ideal gas at STP is approximately?", a:["11.2 dm³","22.4 dm³","24.0 dm³","44.8 dm³"], correct:1},
+  {q:"Which compound is most likely to exhibit hydrogen bonding?", a:["CH₄","NH₃","CO₂","H₂S"], correct:1},
+  {q:"Which law best explains why gases mix uniformly?", a:["Boyle’s law","Charles’ law","Graham’s law","Kinetic molecular theory"], correct:3},
+  {q:"Which property decreases down Group 17?", a:["Atomic radius","Reactivity","Electronegativity","Shielding effect"], correct:2},
+  {q:"Which quantity is directly proportional to absolute temperature?", a:["Average kinetic energy","Gas pressure only","Molecular mass","Volume only"], correct:0},
+  {q:"Which orbital combination forms a pi bond?", a:["s-s overlap","p-p sideways overlap","s-p overlap","Hybrid-hybrid overlap"], correct:1},
+  {q:"Which statement about entropy is correct?", a:["It decreases in spontaneous processes","It measures randomness","It is zero for all reactions","It equals enthalpy"], correct:1},
+  {q:"Which element has the highest electron affinity?", a:["Fluorine","Chlorine","Oxygen","Nitrogen"], correct:1},
+  {q:"Which quantum number determines the orientation of an orbital in space?", a:["n","l","m","s"], correct:2},
+  {q:"At constant temperature, decreasing the volume of a gas will?", a:["Decrease pressure","Increase pressure","Not affect pressure","Reduce kinetic energy"], correct:1},
+  {q:"Which process is represented by a negative enthalpy change?", a:["Endothermic","Exothermic","Isothermal","Adiabatic"], correct:1},
+  {q:"An element with atomic number 17 belongs to which group?", a:["Group 1","Group 2","Group 17","Group 18"], correct:2},
+  {q:"The rate of diffusion of a gas is inversely proportional to the square root of its?", a:["Pressure","Volume","Density","Molar mass"], correct:3},
+
+  {q:"Which sub-shell appears first in the Aufbau filling order?", a:["3p","4s","3d","4p"], correct:1},
+  {q:"If the neutron number of an atom is changed, the atom becomes a?", a:["Cation","Anion","Isotope","Isobar"], correct:2},
+  {q:"Which condition favors deviation from ideal gas behavior?", a:["Low pressure and high temperature","High pressure and low temperature","Low pressure and low volume","High temperature and high volume"], correct:1},
+  {q:"Which law explains why reaction enthalpy is independent of pathway?", a:["Boyle’s law","Charles’ law","Hess’s law","Avogadro’s law"], correct:2},
+  {q:"The hybridization of the central atom in NH₃ is?", a:["sp","sp²","sp³","dsp²"], correct:2},
+
+  {q:"Which particle has approximately the same mass as a proton?", a:["Electron","Neutron","Positron","Photon"], correct:1},
+  {q:"What happens to atomic radius across a period?", a:["Increases","Decreases","Remains constant","Irregular"], correct:1},
+  {q:"Which gas law relates pressure directly to temperature at constant volume?", a:["Boyle’s law","Charles’ law","Gay-Lussac’s law","Avogadro’s law"], correct:2},
+  {q:"The strongest intermolecular force among the following is?", a:["London force","Dipole-dipole","Hydrogen bonding","Van der Waals"], correct:2},
+  {q:"Which quantity remains constant during an isothermal process?", a:["Pressure","Volume","Temperature","Internal energy"], correct:2},
+
+  {q:"The empirical formula of a compound shows?", a:["Actual number of atoms","Simplest mole ratio","Total molecular mass","Structural arrangement"], correct:1},
+  {q:"Which orbital has a dumbbell shape?", a:["s","p","d","f"], correct:1},
+  {q:"If ΔH is positive, the reaction is?", a:["Exothermic","Spontaneous","Endothermic","Reversible"], correct:2},
+  {q:"Which factor does NOT affect gas pressure?", a:["Temperature","Volume","Number of moles","Molar mass"], correct:3},
+  {q:"The number of electrons in a neutral atom equals the number of?", a:["Neutrons","Nucleons","Protons","Isotopes"], correct:2},
+
+  {q:"Which element has the highest first ionization energy?", a:["Na","Mg","Al","Ne"], correct:3},
+  {q:"A bond formed by complete electron transfer is?", a:["Covalent","Metallic","Ionic","Hydrogen"], correct:2},
+  {q:"The SI unit of enthalpy is?", a:["Joule","Kelvin","Pascal","Mole"], correct:0},
+  {q:"Which change increases the rate of diffusion of a gas?", a:["Increasing molar mass","Lowering temperature","Reducing pressure","Decreasing volume"], correct:2},
+  {q:"The maximum number of electrons in the third energy level is?", a:["8","18","32","50"], correct:1},
+
+  {q:"Which state of matter has the least intermolecular attraction?", a:["Solid","Liquid","Gas","Plasma"], correct:2},
+  {q:"The mole concept links mass to?", a:["Energy","Pressure","Number of particles","Temperature"], correct:2},
+  {q:"Which electron transition produces emission of radiation?", a:["Lower to higher energy","Higher to lower energy","Same energy level","Ionization"], correct:1},
+  {q:"Which factor increases boiling point?", a:["Low intermolecular force","High vapor pressure","Strong intermolecular force","Low atmospheric pressure"], correct:2},
+  {q:"Which gas will effuse fastest under identical conditions?", a:["CO₂","O₂","H₂","N₂"], correct:2},
+
+  {q:"The shape of the p-orbital is determined by which quantum number?", a:["n","l","m","s"], correct:1},
+  {q:"Which statement is true of alkali metals?", a:["High electronegativity","Low reactivity","One valence electron","Exist freely in nature"], correct:2},
+  {q:"During sublimation, a substance changes from?", a:["Liquid to gas","Solid to gas","Gas to solid","Solid to liquid"], correct:1},
+  {q:"Which parameter is constant in Boyle’s law?", a:["Temperature","Pressure","Volume","Moles"], correct:0},
+  {q:"Which quantity determines the limiting reagent?", a:["Highest molar mass","Least mole ratio","Largest volume","Highest concentration"], correct:1},
+
+  {q:"Which orbital has the highest energy in the same shell?", a:["s","p","d","f"], correct:3},
+  {q:"An increase in nuclear charge across a period causes?", a:["Larger atoms","Lower ionization energy","Smaller atoms","More shielding"], correct:2},
+  {q:"Which law states that equal volumes of gases contain equal numbers of molecules?", a:["Boyle’s","Charles’","Graham’s","Avogadro’s"], correct:3},
+  {q:"The heat measured during a reaction at constant pressure equals?", a:["ΔU","ΔS","ΔH","ΔG"], correct:2},
+  {q:"Which factor does NOT affect reaction enthalpy?", a:["Physical state","Temperature","Catalyst","Amount of reactants"], correct:2},
+
+  {q:"Which particle was discovered using cathode ray tubes?", a:["Proton","Electron","Neutron","Alpha particle"], correct:1},
+  {q:"The octet rule is mainly obeyed by?", a:["Transition metals","Noble gases","Main group elements","Lanthanides"], correct:2},
+  {q:"Which condition gives maximum gas volume?", a:["Low temperature, high pressure","High temperature, low pressure","Low temperature, low pressure","High pressure, high temperature"], correct:1},
+  {q:"The unit of gas constant R in SI is?", a:["J mol⁻¹ K⁻¹","Pa K⁻¹","J K⁻¹","mol J⁻¹"], correct:0},
+  {q:"Which electron has the highest penetrating power?", a:["1s","2s","2p","3p"], correct:0}
+],
+
+
+
+
+
+"MTH101: General Mathematics I":[
+  {q:"Solve for x: 2x + 5 = 13", a:["3","4","5","6"], correct:1},
+  {q:"If f(x) = 3x², find f(2)", a:["6","8","12","16"], correct:2},
+  {q:"The value of sin 30° is?", a:["1/2","√3/2","1","0"], correct:0},
+  {q:"Which of the following is a quadratic equation?", a:["x + 2 = 0","x² + 3x + 2 = 0","3x − 1 = 0","x³ − 1 = 0"], correct:1},
+  {q:"The slope of the line y = 5x − 7 is?", a:["−7","5","7","−5"], correct:1},
+  {q:"Find the determinant of the matrix [[1,2],[3,4]]", a:["−2","2","10","−10"], correct:0},
+  {q:"Which angle has cosine equal to zero?", a:["0°","30°","90°","60°"], correct:2},
+  {q:"The solution of |x| = 4 is?", a:["x = 4","x = −4","x = ±4","x = 0"], correct:2},
+  {q:"If A = {1,2,3}, how many subsets does A have?", a:["3","6","8","9"], correct:2},
+  {q:"The inverse of 1/5 is?", a:["5","−5","1/25","−1/5"], correct:0},
+  {q:"Find the value of 2³ × 2²", a:["2⁵","2⁶","2⁸","2¹"], correct:0},
+  {q:"The distance between points (0,0) and (3,4) is?", a:["5","7","4","6"], correct:0},
+  {q:"Which of the following is NOT a real number?", a:["√9","√−4","0","−2"], correct:1},
+  {q:"The solution of x² = 9 is?", a:["x = 3","x = −3","x = ±3","x = 0"], correct:2},
+  {q:"If tan θ = 1, then θ equals?", a:["30°","45°","60°","90°"], correct:1},
+  {q:"Which is the correct expansion of (a + b)²?", a:["a² + b²","a² − 2ab + b²","a² + 2ab + b²","2a² + b²"], correct:2},
+  {q:"The domain of f(x) = √(x − 2) is?", a:["x ≥ 0","x > 2","x ≥ 2","x ≤ 2"], correct:2},
+  {q:"Find the gradient of y = 2x² at x = 1", a:["2","3","4","5"], correct:2},
+  {q:"Which is a linear equation?", a:["x² + 1 = 0","3x − 4 = 0","x³ − 1 = 0","1/x = 2"], correct:1},
+  {q:"The value of cos 60° is?", a:["1","1/2","√3/2","0"], correct:1},
+  {q:"If log₁₀ x = 2, then x equals?", a:["10","100","2","20"], correct:1},
+  {q:"Which set contains only integers?", a:["{1.5, 2.5}","{−2, 0, 3}","{√2, 3}","{1/2, 2}"], correct:1},
+  {q:"The sum of the first 10 natural numbers is?", a:["45","50","55","60"], correct:2},
+  {q:"Which matrix is an identity matrix?", a:["[[1,0],[0,1]]","[[0,1],[1,0]]","[[1,1],[0,1]]","[[0,0],[1,1]]"], correct:0},
+  {q:"If x ∈ ℝ, then x² is always?", a:["Positive","Negative","Zero","Non-negative"], correct:3},
+
+  {q:"Solve: 5x − 10 = 0", a:["x = 5","x = 2","x = −2","x = 10"], correct:1},
+  {q:"The midpoint of (2,4) and (6,8) is?", a:["(4,6)","(5,6)","(3,5)","(6,4)"], correct:0},
+  {q:"The value of tan 45° is?", a:["0","1","√3","−1"], correct:1},
+  {q:"Which operation is NOT closed in real numbers?", a:["Addition","Multiplication","Division by zero","Subtraction"], correct:2},
+  {q:"Find the common difference of the AP: 2, 5, 8, ...", a:["2","3","4","5"], correct:1},
+
+  {q:"If x = −2, evaluate x³", a:["−8","8","−4","4"], correct:0},
+  {q:"Which of the following is a rational number?", a:["√3","π","0.75","√5"], correct:2},
+  {q:"The equation of a vertical line is?", a:["y = mx + c","y = k","x = k","x + y = k"], correct:2},
+  {q:"The limit of f(x) = x² as x → 2 is?", a:["2","3","4","8"], correct:2},
+  {q:"Which trigonometric ratio equals opposite/hypotenuse?", a:["cos","tan","sin","cot"], correct:2},
+
+  {q:"The inverse of matrix [[a,0],[0,a]] where a ≠ 0 is?", a:["[[a,0],[0,a]]","[[1/a,0],[0,1/a]]","[[0,a],[a,0]]","[[a²,0],[0,a²]]"], correct:1},
+  {q:"If n(A) = 5, then number of proper subsets is?", a:["31","32","30","29"], correct:0},
+  {q:"Which function is increasing for all real x?", a:["f(x)=−x","f(x)=x²","f(x)=x","f(x)=−x²"], correct:2},
+  {q:"Solve: x² − 4x = 0", a:["x = 4","x = 0","x = 0 or 4","x = ±2"], correct:2},
+  {q:"The sum of angles in a triangle is?", a:["90°","180°","270°","360°"], correct:1},
+
+  {q:"Which number system includes all others?", a:["Natural","Integer","Rational","Real"], correct:3},
+  {q:"The range of y = x² is?", a:["y ≥ 0","y ≤ 0","All real numbers","y > 0"], correct:0},
+  {q:"Find the value of √49", a:["6","7","8","9"], correct:1},
+  {q:"The value of sin 90° is?", a:["0","1","−1","1/2"], correct:1},
+  {q:"Which of the following is a scalar quantity?", a:["Velocity","Force","Acceleration","Speed"], correct:3}],
+
+
+"MTH102: General Mathematics II":[
+  {q:"Find dy/dx if y = 3x³ − 5x² + 4", a:["9x² − 10x","6x² − 10x","9x² − 5x","3x² − 10"], correct:0},
+  {q:"Evaluate ∫ 2x dx", a:["x² + C","2x² + C","x²","2x + C"], correct:0},
+  {q:"If z = 3 + 4i, find |z|", a:["3","4","5","7"], correct:2},
+  {q:"Which of the following is a first order differential equation?", a:["d²y/dx² + y = 0","dy/dx = x²","x²y'' + y = 0","d³y/dx³ = 1"], correct:1},
+  {q:"The derivative of sin x is?", a:["cos x","−cos x","−sin x","tan x"], correct:0},
+
+  {q:"Evaluate ∫ dx/x", a:["ln x + C","1/x + C","x ln x","log₁₀ x"], correct:0},
+  {q:"The general solution of dy/dx = 0 is?", a:["y = 0","y = x","y = C","y = Cx"], correct:2},
+  {q:"If r = ai + bj, then |r| equals?", a:["a + b","√(a² + b²)","a² + b²","|a − b|"], correct:1},
+  {q:"Which test is used to determine convergence of alternating series?", a:["Ratio test","Comparison test","Integral test","Leibniz test"], correct:3},
+  {q:"The integral of cos x dx is?", a:["sin x + C","−sin x + C","cos x + C","−cos x + C"], correct:0},
+
+  {q:"Find d/dx (e²x)", a:["e²x","2e²x","2xe²x","e^x"], correct:1},
+  {q:"If z₁ = 1 + i and z₂ = 1 − i, then z₁z₂ equals?", a:["0","1","2","−1"], correct:2},
+  {q:"Which of the following represents a vector quantity?", a:["Mass","Speed","Distance","Force"], correct:3},
+  {q:"Evaluate ∫ 0 dx", a:["0","C","x","1"], correct:1},
+  {q:"The second derivative of x³ is?", a:["6x","3x²","x²","6"], correct:0},
+
+  {q:"If dy/dx = 3x², find y", a:["x³ + C","3x³ + C","x² + C","6x + C"], correct:0},
+  {q:"Which series is geometric?", a:["1 + 2 + 3 + 4","1 + 1/2 + 1/4 + 1/8","1 + 1/2 + 1/3","2 + 4 + 6 + 8"], correct:1},
+  {q:"Find the real part of z = 5 − 2i", a:["−2","2","5","7"], correct:2},
+  {q:"The dot product of perpendicular vectors is?", a:["1","−1","Maximum","Zero"], correct:3},
+  {q:"Which of the following is an improper integral?", a:["∫₀¹ x dx","∫₁² x² dx","∫₀^∞ e⁻x dx","∫₁³ 2x dx"], correct:2},
+
+  {q:"Differentiate ln x", a:["1/x","ln x","x","e^x"], correct:0},
+  {q:"The solution of dy/dx = ky is?", a:["y = kx","y = e^kx","y = k e^x","y = x^k"], correct:1},
+  {q:"If |a| = 5 and |b| = 12, find |a + b| when a ⟂ b", a:["13","7","17","60"], correct:0},
+  {q:"Which function has maximum at x = 0?", a:["y = x²","y = −x²","y = x³","y = e^x"], correct:1},
+  {q:"Evaluate ∫ e^x dx", a:["e^x + C","xe^x + C","e^x","1/e^x"], correct:0},
+
+  {q:"The argument of the complex number i is?", a:["0","π/4","π/2","π"], correct:2},
+  {q:"Find d²y/dx² if y = 2x⁴", a:["8x²","12x²","24x²","48x²"], correct:2},
+  {q:"Which method is used to solve dy/dx = f(x)?", a:["Integrating factor","Separation of variables","Substitution","Matrix method"], correct:1},
+  {q:"If a series has finite sum, it is said to be?", a:["Divergent","Oscillatory","Infinite","Convergent"], correct:3},
+  {q:"Evaluate ∫ x² dx", a:["x³","x³/3 + C","2x","x²/2"], correct:1},
+
+  {q:"The cross product of parallel vectors is?", a:["1","Maximum","Undefined","Zero"], correct:3},
+  {q:"Differentiate tan x", a:["sec² x","cosec² x","−sec² x","sin x"], correct:0},
+  {q:"Which of the following is a linear differential equation?", a:["dy/dx + y = x","y² dy/dx = x","(dy/dx)² = y","y dy/dx = x²"], correct:0},
+  {q:"The modulus of −3i is?", a:["−3","0","3","1"], correct:2},
+  {q:"Find ∫ 1 dx", a:["x + C","1","0","C"], correct:0},
+
+  {q:"If u = x²y, then ∂u/∂x equals?", a:["2xy","x²","2x","x²y"], correct:0},
+  {q:"Which test is suitable for series with factorials?", a:["Integral test","Comparison test","Ratio test","Root test"], correct:2},
+  {q:"Find the slope of y = x³ at x = 2", a:["6","8","12","4"], correct:2},
+  {q:"If z = re^{iθ}, then r represents?", a:["Argument","Imaginary part","Modulus","Angle"], correct:2},
+  {q:"The area under y = f(x) from a to b is given by?", a:["dy/dx","∫_a^b f(x) dx","f(b) − f(a)","lim x→∞"], correct:1},
+
+  {q:"Which function is its own derivative?", a:["x²","e^x","sin x","ln x"], correct:1},
+  {q:"Evaluate ∫ 2e^x dx", a:["e^x + C","2e^x + C","e^{2x}","xe^x"], correct:1},
+  {q:"If dy/dx = x/y, then the equation is?", a:["Exact","Linear","Separable","Homogeneous"], correct:2},
+  {q:"Which of the following represents divergence?", a:["Finite sum","Approaches zero","Infinite oscillation","Sum tends to infinity"], correct:3},
+  {q:"Find the unit vector in the direction of 3i + 4j", a:["(3/5)i + (4/5)j","3i + 4j","(4/5)i + (3/5)j","(5/3)i + (5/4)j"], correct:0}
+],
+
+
+"MTH103: General Mathematics III/Coordinate Geometry":[
+  {q:"Find the distance between points (1,2) and (4,6)", a:["5","6","7","10"], correct:0},
+  {q:"The midpoint of (−2,3) and (4,7) is?", a:["(1,5)","(0,5)","(1,4)","(0,4)"], correct:0},
+  {q:"The slope of the line joining (2,3) and (5,7) is?", a:["4/3","3/4","3","4"], correct:0},
+  {q:"The equation of a vertical line through x = 2 is?", a:["y = 2","x = 2","y − 2 = 0","x − 2 = 0"], correct:1},
+  {q:"The angle between vectors a = i + j and b = i − j is?", a:["0°","90°","45°","60°"], correct:1},
+
+  {q:"Find the unit vector in the direction of 3i + 4j", a:["(3/5)i + (4/5)j","(4/5)i + (3/5)j","3i + 4j","(5/3)i + (5/4)j"], correct:0},
+  {q:"The line 2x − 3y + 4 = 0 has slope?", a:["2/3","3/2","−2/3","−3/2"], correct:2},
+  {q:"Which of the following lines are perpendicular?", a:["y = x, y = −x","y = 2x, y = x","y = 0, x = 0","y = x, y = x + 1"], correct:0},
+  {q:"The area of a triangle with vertices (0,0),(4,0),(0,3) is?", a:["6","5","12","7"], correct:0},
+  {q:"The centroid of triangle with vertices (1,2),(3,4),(5,0) is?", a:["(3,2)","(3,3)","(3,4)","(3,0)"], correct:0},
+
+  {q:"Find the dot product of a = i + 2j and b = 3i + j", a:["5","7","4","6"], correct:1},
+  {q:"The vector 2i − 3j has magnitude?", a:["√13","5","1","√10"], correct:0},
+  {q:"The cross product of i and j is?", a:["k","−k","i","j"], correct:0},
+  {q:"Which of the following points lies on the line y = 2x + 1?", a:["(1,3)","(0,1)","(2,4)","(−1,−2)"], correct:1},
+  {q:"The distance from point (2,3) to x-axis is?", a:["2","3","√13","5"], correct:1},
+
+  {q:"The equation of a line parallel to 3x − 4y + 5 = 0 is?", a:["3x − 4y + 2 = 0","4x − 3y + 5 = 0","3x + 4y = 0","3x − 4y − 5 = 0"], correct:0},
+  {q:"If a·b = 0, the vectors are?", a:["Parallel","Perpendicular","Same","Opposite"], correct:1},
+  {q:"The distance between parallel lines y = 2x + 3 and y = 2x − 5 is?", a:["√5","8/√5","10/√5","2"], correct:1},
+  {q:"The direction cosines of a vector along the x-axis are?", a:["(1,0,0)","(0,1,0)","(0,0,1)","(1,1,1)"], correct:0},
+  {q:"Equation of a plane passing through point (1,2,3) with normal vector n = i + j + k is?", a:["x + y + z = 6","x + y + z = 0","x + y + z = 1","x + y + z = 3"], correct:0},
+
+  {q:"Find the vector equation of a line passing through (1,0,0) and parallel to i + 2j + 3k", a:["r = (1,0,0) + t(1,2,3)","r = (0,1,0) + t(1,2,3)","r = (1,0,0) + t(2,1,3)","r = (0,0,1) + t(1,2,3)"], correct:0},
+  {q:"The angle between planes x + y + z = 1 and x − y + z = 0 is?", a:["90°","60°","45°","30°"], correct:2},
+  {q:"Find the projection of a = i + j on b = i − j", a:["0","1","−1","√2"], correct:2},
+  {q:"Which of the following lines intersect at a point?", a:["x = 1,y = 2 and x = 1,y = 3","y = x and y = −x","y = 2x + 1 and y = 2x − 1","x = 0 and y = 0"], correct:3},
+  {q:"The magnitude of vector 3i − 4j + 12k is?", a:["13","√169","15","12"], correct:0},
+
+  {q:"The sum of two vectors a = i + j and b = 2i − j is?", a:["3i","3i + j","3i + 0j","i + j"], correct:1},
+  {q:"The cross product a × b is maximum when vectors are?", a:["Parallel","Perpendicular","Anti-parallel","Zero"], correct:1},
+  {q:"Which of the following points is collinear with (1,2) and (3,6)?", a:["(2,4)","(2,5)","(0,1)","(4,9)"], correct:0},
+  {q:"The line joining points (1,1,1) and (2,3,4) has direction ratios?", a:["1,2,3","2,3,4","1,1,1","3,4,5"], correct:0},
+  {q:"Equation of a plane perpendicular to vector i + 2j + 2k and passing through origin is?", a:["x + 2y + 2z = 0","x + y + z = 0","2x + y + 2z = 0","x − 2y + z = 0"], correct:0},
+
+  {q:"Find the distance between point (1,2,3) and plane x + y + z = 6", a:["2","√3","1","3"], correct:3},
+  {q:"The vector (i − j) × (i + j) is?", a:["2k","−2k","i + j","0"], correct:0},
+  {q:"The parametric equations of x − y = 2 are?", a:["x = t + 2, y = t","x = t, y = t − 2","x = 2t, y = t","x = t, y = 2t"], correct:0},
+  {q:"Which of the following vectors are parallel?", a:["i + j and 2i + 2j","i − j and i + j","i and j","i + k and i − k"], correct:0},
+  {q:"The centroid of tetrahedron with vertices (0,0,0),(1,0,0),(0,1,0),(0,0,1) is?", a:["(1/4,1/4,1/4)","(1/3,1/3,1/3)","(1/2,1/2,1/2)","(0,0,0)"], correct:0},
+
+  {q:"If vectors a = i + 2j and b = 2i + 4j, then a·b equals?", a:["0","10","10","1"], correct:2},
+  {q:"The distance between skew lines is always?", a:["Zero","Positive","Negative","Can be zero or positive"], correct:1},
+  {q:"Find the vector from point A(1,2,3) to B(4,0,−1)", a:["3i − 2j − 4k","−3i + 2j + 4k","3i + 2j − 4k","i + j + k"], correct:0},
+  {q:"Equation of a line in symmetric form through (1,0,2) and direction ratios 2,3,1 is?", a:["(x−1)/2 = y/3 = (z−2)/1","x/2 = (y−0)/3 = z/1","x = 2t+1, y = 3t, z = t+2","x−1=2y=3z−2"], correct:0},
+  {q:"If a plane intersects axes at (1,0,0),(0,2,0),(0,0,3), its equation is?", a:["x/1 + y/2 + z/3 = 1","x + 2y + 3z = 1","x + y + z = 1","x/3 + y/2 + z/1 = 1"], correct:0},
+
+  {q:"The scalar triple product a·(b×c) gives?", a:["Vector","Scalar","Matrix","Zero"], correct:1},
+  {q:"Find the magnitude of cross product of a = i + j and b = i − j", a:["2","1","0","√2"], correct:0},
+  {q:"A line has direction ratios 2,−1,2. A plane perpendicular to this line has normal vector?", a:["2,−1,2","1,2,3","2,1,−2","Any vector"], correct:0},
+  {q:"Equation of a plane passing through three points (0,0,0),(1,0,0),(0,1,0) is?", a:["z = 0","x + y + z = 1","x = y","y = z"], correct:0},
+  {q:"Distance between points (1,2,3) and (4,5,6) is?", a:["3√3","√14","5","√27"], correct:0}
+],
+
+
+
+
+
+"BIO101: General Biology I":[
+  {q:"The basic unit of life is?", a:["Tissue","Organ","Cell","Molecule"], correct:2},
+  {q:"Which organelle is known as the powerhouse of the cell?", a:["Nucleus","Mitochondria","Ribosome","Chloroplast"], correct:1},
+  {q:"DNA is composed of?", a:["Amino acids","Nucleotides","Fatty acids","Monosaccharides"], correct:1},
+  {q:"Which of the following is a prokaryote?", a:["Bacteria","Fungi","Algae","Plant cell"], correct:0},
+  {q:"The process by which plants make food is?", a:["Respiration","Photosynthesis","Transpiration","Fermentation"], correct:1},
+
+  {q:"Mendel is famous for work on?", a:["Evolution","Genetics","Cell theory","Ecology"], correct:1},
+  {q:"Which organelle contains digestive enzymes?", a:["Lysosome","Golgi apparatus","Endoplasmic reticulum","Nucleus"], correct:0},
+  {q:"Which macromolecule stores genetic information?", a:["Protein","DNA","Lipid","Carbohydrate"], correct:1},
+  {q:"The site of protein synthesis is?", a:["Ribosome","Mitochondria","Chloroplast","Lysosome"], correct:0},
+  {q:"The fluid mosaic model describes?", a:["Cell membrane","Nucleus","Cytoplasm","Mitochondria"], correct:0},
+
+  {q:"Which biomolecule is the main source of energy?", a:["Carbohydrate","Protein","Lipid","Nucleic acid"], correct:0},
+  {q:"Which type of RNA carries amino acids?", a:["mRNA","tRNA","rRNA","snRNA"], correct:1},
+  {q:"Which process reduces chromosome number by half?", a:["Mitosis","Meiosis","Fertilization","Binary fission"], correct:1},
+  {q:"Which kingdom includes multicellular photosynthetic organisms?", a:["Fungi","Plantae","Animalia","Protista"], correct:1},
+  {q:"Which process releases energy from glucose?", a:["Photosynthesis","Respiration","Transpiration","Fermentation"], correct:1},
+
+  {q:"Which macromolecule forms cell membranes?", a:["Lipid","Protein","Carbohydrate","Nucleic acid"], correct:0},
+  {q:"Which organelle is responsible for packaging proteins?", a:["Golgi apparatus","Ribosome","Nucleus","Chloroplast"], correct:0},
+  {q:"Who proposed the cell theory?", a:["Mendel","Schleiden & Schwann","Darwin","Hooke"], correct:1},
+  {q:"Which structure controls movement of substances in and out of the cell?", a:["Cell wall","Cell membrane","Nucleus","Ribosome"], correct:1},
+  {q:"Which type of bond holds amino acids together?", a:["Peptide bond","Hydrogen bond","Ionic bond","Glycosidic bond"], correct:0},
+
+  {q:"Which level of organization is above cells?", a:["Tissue","Organ","Organ system","Molecule"], correct:0},
+  {q:"Which type of RNA forms the core of ribosomes?", a:["mRNA","tRNA","rRNA","snRNA"], correct:2},
+  {q:"Which process is responsible for growth and repair?", a:["Mitosis","Meiosis","Binary fission","Apoptosis"], correct:0},
+  {q:"Which is the structural unit of proteins?", a:["Nucleotide","Amino acid","Monosaccharide","Fatty acid"], correct:1},
+  {q:"Which of the following is a heterotroph?", a:["Algae","Fungi","Plant","Cyanobacteria"], correct:1},
+
+  {q:"Which of the following is part of the cell theory?", a:["All cells have mitochondria","All living things are made of cells","Cells produce DNA","Cells have ribosomes"], correct:1},
+  {q:"Which process produces gametes?", a:["Mitosis","Meiosis","Binary fission","Budding"], correct:1},
+  {q:"Which macromolecule catalyzes chemical reactions?", a:["Protein","Carbohydrate","Lipid","Nucleic acid"], correct:0},
+  {q:"Which organelle contains chlorophyll?", a:["Mitochondria","Chloroplast","Nucleus","Ribosome"], correct:1},
+  {q:"Which process transports water from roots to leaves?", a:["Transpiration","Respiration","Photosynthesis","Diffusion"], correct:0},
+
+  {q:"Which theory explains evolution through natural selection?", a:["Cell theory","Mendelian theory","Darwin’s theory","Germ theory"], correct:2},
+  {q:"Which kingdom includes unicellular eukaryotes?", a:["Plantae","Animalia","Protista","Fungi"], correct:2},
+  {q:"Which part of the cell stores hereditary material?", a:["Ribosome","Nucleus","Golgi body","Mitochondria"], correct:1},
+  {q:"Which organelle is double-membrane bound and produces ATP?", a:["Mitochondria","Ribosome","Lysosome","Endoplasmic reticulum"], correct:0},
+  {q:"Which bond stabilizes the double helix structure of DNA?", a:["Covalent bond","Hydrogen bond","Ionic bond","Peptide bond"], correct:1},
+
+  {q:"Which process occurs in the cytoplasm and produces ATP?", a:["Glycolysis","Krebs cycle","Photosynthesis","Meiosis"], correct:0},
+  {q:"Which type of macromolecule is RNA?", a:["Protein","Lipid","Nucleic acid","Carbohydrate"], correct:2},
+  {q:"Which process is responsible for water loss from leaves?", a:["Photosynthesis","Transpiration","Respiration","Diffusion"], correct:1},
+  {q:"Which structure is common to all cells?", a:["Cell wall","Plasma membrane","Chloroplast","Nucleus"], correct:1},
+  {q:"Which organelle modifies and packages proteins?", a:["Ribosome","Golgi apparatus","Mitochondria","Lysosome"], correct:1},
+
+  {q:"Which type of reproduction involves a single parent?", a:["Sexual","Asexual","Meiosis","Fertilization"], correct:1},
+  {q:"Which macromolecule stores energy long-term?", a:["Carbohydrate","Protein","Lipid","Nucleic acid"], correct:2},
+  {q:"Which of the following is non-living at cellular level?", a:["Virus","Bacteria","Fungi","Plant cell"], correct:0},
+  {q:"Which process converts light energy to chemical energy?", a:["Respiration","Photosynthesis","Fermentation","Transpiration"], correct:1},
+  {q:"Which structure protects the cell from mechanical stress?", a:["Cell membrane","Cell wall","Cytoplasm","Nucleus"], correct:1},
+
+  {q:"Which molecule forms the primary structure of cell membrane?", a:["Protein","Phospholipid","Carbohydrate","Nucleic acid"], correct:1},
+  {q:"Which organelle is involved in detoxification?", a:["Smooth endoplasmic reticulum","Rough endoplasmic reticulum","Mitochondria","Ribosome"], correct:0},
+  {q:"Which kingdom includes decomposers?", a:["Fungi","Plantae","Animalia","Protista"], correct:0},
+  {q:"Which organelle is absent in prokaryotes?", a:["Ribosome","Nucleus","Cell membrane","Cytoplasm"], correct:1},
+  {q:"Which macromolecule acts as enzymes?", a:["Lipids","Proteins","Carbohydrates","Nucleic acids"], correct:1},
+
+  {q:"Which process maintains homeostasis in cells?", a:["Photosynthesis","Diffusion","Osmosis","Respiration"], correct:2},
+  {q:"Which molecule is double-stranded in most organisms?", a:["RNA","DNA","Protein","Lipid"], correct:1},
+  {q:"Which organelle stores water, salts, and pigments?", a:["Chloroplast","Vacuole","Golgi apparatus","Mitochondria"], correct:1},
+  {q:"Which gas is released during photosynthesis?", a:["CO2","O2","N2","H2"], correct:1},
+  {q:"Which level of organization comes after organ?", a:["Cell","Tissue","Organ system","Organism"], correct:2}
+],
+
+
+"BIO102: General Biology II":[
+  {q:"Which tissue covers body surfaces and lines cavities?", a:["Connective","Epithelial","Muscle","Nervous"], correct:1},
+  {q:"Which blood cells are responsible for oxygen transport?", a:["Leukocytes","Erythrocytes","Platelets","Macrophages"], correct:1},
+  {q:"Which organelle is the site of ATP synthesis?", a:["Ribosome","Mitochondria","Golgi apparatus","Lysosome"], correct:1},
+  {q:"Which enzyme breaks down starch into sugars?", a:["Lipase","Amylase","Protease","Pepsin"], correct:1},
+  {q:"Which microorganism is prokaryotic?", a:["Bacteria","Fungi","Protozoa","Algae"], correct:0},
+
+  {q:"Which gland produces insulin?", a:["Pituitary","Pancreas","Thyroid","Adrenal"], correct:1},
+  {q:"Which muscle type is involuntary and non-striated?", a:["Cardiac","Skeletal","Smooth","None"], correct:2},
+  {q:"Which tissue connects muscles to bones?", a:["Ligament","Tendon","Cartilage","Adipose"], correct:1},
+  {q:"Which organ filters blood and forms urine?", a:["Liver","Kidney","Spleen","Lungs"], correct:1},
+  {q:"Which organelle is involved in protein modification and packaging?", a:["Ribosome","Golgi apparatus","Endoplasmic reticulum","Lysosome"], correct:1},
+
+  {q:"Which biomolecule is the main component of enzymes?", a:["Carbohydrate","Protein","Lipid","Nucleic acid"], correct:1},
+  {q:"Which process moves water across a selectively permeable membrane?", a:["Diffusion","Osmosis","Active transport","Facilitated diffusion"], correct:1},
+  {q:"Which organelle contains hydrolytic enzymes?", a:["Mitochondria","Lysosome","Ribosome","Chloroplast"], correct:1},
+  {q:"Which microorganism is used in fermentation to produce alcohol?", a:["Bacteria","Fungi","Protozoa","Virus"], correct:1},
+  {q:"Which tissue transmits electrical impulses?", a:["Muscle","Connective","Nervous","Epithelial"], correct:2},
+
+  {q:"Which vitamin is water-soluble?", a:["Vitamin A","Vitamin C","Vitamin D","Vitamin E"], correct:1},
+  {q:"Which gas is primarily carried by red blood cells?", a:["CO2","O2","N2","H2O"], correct:1},
+  {q:"Which structure controls entry and exit of substances in a cell?", a:["Cell wall","Cell membrane","Nucleus","Mitochondria"], correct:1},
+  {q:"Which microorganism causes tuberculosis?", a:["Escherichia coli","Mycobacterium tuberculosis","Plasmodium","Streptococcus"], correct:1},
+  {q:"Which organ secretes bile?", a:["Pancreas","Liver","Gallbladder","Stomach"], correct:1},
+
+  {q:"Which tissue stores fat in the body?", a:["Muscle","Connective","Adipose","Epithelial"], correct:2},
+  {q:"Which blood component helps in clotting?", a:["Erythrocytes","Platelets","Leukocytes","Plasma"], correct:1},
+  {q:"Which organelle synthesizes lipids?", a:["Smooth endoplasmic reticulum","Rough endoplasmic reticulum","Golgi apparatus","Ribosome"], correct:0},
+  {q:"Which microorganism causes malaria?", a:["Plasmodium","Bacteria","Fungi","Virus"], correct:0},
+  {q:"Which tissue type forms tendons and ligaments?", a:["Connective","Muscle","Epithelial","Nervous"], correct:0},
+
+  {q:"Which process breaks down glucose to release energy?", a:["Photosynthesis","Cellular respiration","Fermentation","Transpiration"], correct:1},
+  {q:"Which organelle contains DNA and regulates cell activities?", a:["Nucleus","Ribosome","Lysosome","Golgi apparatus"], correct:0},
+  {q:"Which blood vessels carry blood away from the heart?", a:["Veins","Capillaries","Arteries","Venules"], correct:2},
+  {q:"Which microorganism is unicellular and eukaryotic?", a:["Bacteria","Protozoa","Virus","Algae"], correct:1},
+  {q:"Which gland is known as the master gland?", a:["Pituitary","Thyroid","Adrenal","Pancreas"], correct:0},
+
+  {q:"Which organ stores bile?", a:["Liver","Gallbladder","Pancreas","Stomach"], correct:1},
+  {q:"Which tissue contracts to produce movement?", a:["Connective","Muscle","Nervous","Epithelial"], correct:1},
+  {q:"Which enzyme digests proteins in the stomach?", a:["Lipase","Amylase","Pepsin","Trypsin"], correct:2},
+  {q:"Which gas is released during respiration?", a:["Oxygen","CO2","Nitrogen","Water vapor"], correct:1},
+  {q:"Which organelle is the site of photosynthesis?", a:["Chloroplast","Mitochondria","Nucleus","Golgi apparatus"], correct:0},
+
+  {q:"Which vitamin is fat-soluble?", a:["Vitamin B1","Vitamin C","Vitamin D","Vitamin B12"], correct:2},
+  {q:"Which microorganism is responsible for yeast fermentation?", a:["Bacteria","Fungi","Protozoa","Virus"], correct:1},
+  {q:"Which connective tissue is flexible and found in joints?", a:["Bone","Cartilage","Ligament","Adipose"], correct:1},
+  {q:"Which blood cells fight infections?", a:["Erythrocytes","Leukocytes","Platelets","Plasma"], correct:1},
+  {q:"Which organ filters nitrogenous waste from blood?", a:["Liver","Kidney","Spleen","Lungs"], correct:1},
+
+  {q:"Which structure produces hormones that regulate metabolism?", a:["Thyroid","Pituitary","Adrenal","Pancreas"], correct:0},
+  {q:"Which microorganism is used in antibiotic production?", a:["Bacteria","Fungi","Protozoa","Virus"], correct:1},
+  {q:"Which type of muscle has striations and voluntary control?", a:["Smooth","Cardiac","Skeletal","None"], correct:2},
+  {q:"Which process moves molecules from high to low concentration?", a:["Diffusion","Osmosis","Active transport","Facilitated diffusion"], correct:0},
+  {q:"Which organ is responsible for blood clotting factor production?", a:["Liver","Kidney","Pancreas","Spleen"], correct:0},
+
+  {q:"Which tissue connects bones to bones?", a:["Tendon","Ligament","Cartilage","Muscle"], correct:1},
+  {q:"Which blood component transports nutrients?", a:["Plasma","RBC","WBC","Platelets"], correct:0},
+  {q:"Which organelle is called the protein factory?", a:["Ribosome","Golgi apparatus","Nucleus","Lysosome"], correct:0},
+  {q:"Which microorganism causes cholera?", a:["Vibrio cholerae","Plasmodium","Escherichia coli","Streptococcus"], correct:0},
+  {q:"Which organ is both endocrine and exocrine?", a:["Pancreas","Thyroid","Pituitary","Adrenal"], correct:0},
+
+  {q:"Which pigment absorbs light in photosynthesis?", a:["Chlorophyll","Carotene","Xanthophyll","Hemoglobin"], correct:0},
+  {q:"Which organelle modifies and packages proteins?", a:["Golgi apparatus","Ribosome","Lysosome","Mitochondria"], correct:0},
+  {q:"Which type of reproduction produces genetically identical offspring?", a:["Sexual","Asexual","Meiosis","Fertilization"], correct:1},
+  {q:"Which organ contains villi for nutrient absorption?", a:["Stomach","Small intestine","Large intestine","Liver"], correct:1},
+  {q:"Which tissue forms the outer layer of the skin?", a:["Connective","Muscle","Epithelial","Nervous"], correct:2}
+],
+
+
+ "BIO103: General Biology III / Microbiolgy and Parasitology":[
+  {q:"Which microorganism produces lactic acid?", a:["Candida","Lactobacillus","E. coli","Plasmodium"], correct:1},
+  {q:"Which virus causes polio?", a:["HIV","Poliovirus","Influenza virus","Hepatitis B virus"], correct:1},
+  {q:"Which immune cells mediate cell-mediated immunity?", a:["T cells","B cells","RBCs","Macrophages"], correct:0},
+  {q:"Which microorganism causes syphilis?", a:["Plasmodium","Treponema pallidum","E. coli","Candida"], correct:1},
+  {q:"Which microorganism reproduces by budding?", a:["Bacillus","Plasmodium","E. coli","Saccharomyces"], correct:3},
+
+  {q:"Which microorganism is gram-positive?", a:["Plasmodium","Salmonella","Staphylococcus aureus","E. coli"], correct:2},
+  {q:"Which organelle is absent in prokaryotic cells?", a:["Ribosome","Flagella","Plasma membrane","Nucleus"], correct:3},
+  {q:"Which microorganism causes malaria?", a:["Plasmodium","Candida","Staphylococcus","Escherichia coli"], correct:0},
+  {q:"Which microbial structure is resistant to heat and desiccation?", a:["Capsule","Endospore","Flagella","Pili"], correct:1},
+  {q:"Which microorganism is used in yogurt production?", a:["E. coli","Saccharomyces","Plasmodium","Lactobacillus"], correct:3},
+
+  {q:"Which microbial process converts nitrogen to usable forms in soil?", a:["Respiration","Fermentation","Photosynthesis","Nitrogen fixation"], correct:3},
+  {q:"Which viral disease is caused by Influenza virus?", a:["Ringworm","Malaria","Influenza","Tuberculosis"], correct:2},
+  {q:"Which lab method is used to isolate pure bacterial cultures?", a:["Microscopy","Staining","Centrifugation","Culture plating"], correct:3},
+  {q:"Which microorganism forms endospores?", a:["Plasmodium","Saccharomyces","Bacillus","Streptococcus"], correct:2},
+  {q:"Which microorganism is unicellular and eukaryotic?", a:["Virus","Bacteria","Protozoa","Mycoplasma"], correct:2},
+
+  {q:"Which microorganism is a model organism in genetics?", a:["Plasmodium","Saccharomyces cerevisiae","E. coli","Bacillus"], correct:1},
+  {q:"Which microbial technique measures growth using turbidity?", a:["Spectrophotometry","Microscopy","Gram staining","Culture plating"], correct:0},
+  {q:"Which microorganism causes cholera?", a:["Candida","Plasmodium","Vibrio cholerae","Staphylococcus aureus"], correct:2},
+  {q:"Which microorganism is used in alcohol fermentation?", a:["Saccharomyces","E. coli","Plasmodium","Streptococcus"], correct:0},
+  {q:"Which immune cells produce antibodies?", a:["Neutrophils","T cells","B cells","Macrophages"], correct:2},
+
+  {q:"Which viral disease is caused by HIV?", a:["AIDS","Influenza","Tuberculosis","Malaria"], correct:0},
+  {q:"Which microbial structure is made of peptidoglycan?", a:["Protozoan pellicle","Fungal cell wall","Viral capsid","Bacterial cell wall"], correct:3},
+  {q:"Which microbial group includes molds and yeasts?", a:["Fungi","Protozoa","Bacteria","Algae"], correct:0},
+  {q:"Which microorganism is prokaryotic?", a:["Algae","Fungi","Protozoa","Bacteria"], correct:3},
+  {q:"Which microorganism reproduces by binary fission?", a:["Virus","Bacteria","Fungi","Protozoa"], correct:1},
+
+  {q:"Which structure helps bacteria adhere to surfaces?", a:["Pili","Capsule","Flagella","Plasma membrane"], correct:0},
+  {q:"Which microorganism is used in bioremediation?", a:["Algae","Virus","Protozoa","Bacteria"], correct:3},
+  {q:"Which microorganism causes tuberculosis?", a:["Plasmodium","Staphylococcus","Mycobacterium tuberculosis","E. coli"], correct:2},
+  {q:"Which type of immunity is passed from mother to child?", a:["Active","Passive","Innate","Cell-mediated"], correct:1},
+  {q:"Which lab technique uses antibodies to detect microbes?", a:["ELISA","Culture plating","Gram stain","Microscopy"], correct:0},
+
+  {q:"Which microorganism causes typhoid fever?", a:["Streptococcus","Candida","Salmonella typhi","Plasmodium"], correct:2},
+  {q:"Which virus has RNA as genetic material?", a:["HIV","Bacteriophage","Herpes simplex","Adenovirus"], correct:0},
+  {q:"Which microorganism is photosynthetic and prokaryotic?", a:["Algae","Cyanobacteria","Fungi","Protozoa"], correct:1},
+  {q:"Which microbial process produces antibiotics?", a:["Virus replication","Bacterial conjugation","Fungal fermentation","Protozoan metabolism"], correct:2},
+  {q:"Which blood cells engulf pathogens?", a:["T cells","RBCs","B cells","Macrophages"], correct:3},
+
+  {q:"Which microorganism causes candidiasis?", a:["Candida albicans","Plasmodium","E. coli","Streptococcus"], correct:0},
+  {q:"Which virus is responsible for influenza?", a:["Influenza virus","Hepatitis B virus","Poliovirus","HIV"], correct:0},
+  {q:"Which microorganism is eukaryotic and unicellular?", a:["Bacteria","Protozoa","Virus","Mycoplasma"], correct:1},
+  {q:"Which microorganism is unicellular and eukaryotic?", a:["Virus","Bacteria","Protozoa","Archaea"], correct:2},
+  {q:"Which virus infects bacteria?", a:["Herpes virus","Influenza virus","Bacteriophage","Retrovirus"], correct:2},
+
+  {q:"Which microorganism causes tetanus?", a:["Bacillus subtilis","Candida","Clostridium tetani","Plasmodium"], correct:2},
+  {q:"Which microbial structure protects bacteria from harsh environments?", a:["Ribosome","Capsule","Cell wall","Flagella"], correct:1},
+  {q:"Which microorganism is an opportunistic pathogen?", a:["E. coli","Plasmodium","Candida albicans","Bacillus subtilis"], correct:2},
+  {q:"Which viral disease is caused by Variola virus?", a:["Influenza","HIV","Poliovirus","Smallpox"], correct:3},
+  {q:"Which microorganism causes athlete’s foot?", a:["Trichophyton","Candida","Bacillus","E. coli"], correct:0},
+
+  {q:"Which structure is responsible for motility in bacteria?", a:["Ribosome","Pili","Flagella","Cilia"], correct:2},
+  {q:"Which organelle is absent in prokaryotes?", a:["Nucleus","Flagella","Plasma membrane","Ribosome"], correct:0},
+  {q:"Which process transfers genetic material between bacteria?", a:["Spore formation","Conjugation","Binary fission","Lytic cycle"], correct:1},
+  {q:"Which microorganism is used in cheese production?", a:["E. coli","Plasmodium","Lactobacillus","Staphylococcus"], correct:2},
+  {q:"Which microbial structure is made of peptidoglycan?", a:["Viral capsid","Fungal cell wall","Bacterial cell wall","Protozoan pellicle"], correct:2},
+
+  {q:"Which microorganism reproduces by budding?", a:["Plasmodium","Saccharomyces","E. coli","Bacillus"], correct:1},
+  {q:"Which viral disease is caused by Influenza virus?", a:["Malaria","Tuberculosis","Influenza","Ringworm"], correct:2},
+  {q:"Which microorganism is photosynthetic and prokaryotic?", a:["Protozoa","Algae","Cyanobacteria","Fungi"], correct:2},
+  {q:"Which lab method is used to isolate pure bacterial cultures?", a:["Centrifugation","Culture plating","Microscopy","Staining"], correct:1},
+  {q:"Which immune cells produce antibodies?", a:["Macrophages","B cells","T cells","Neutrophils"], correct:1}
+],
+
+
+
+
+
+
+"GST101/GST111: Use Of English/communication In English I":[
+    {q:"The primary purpose of communication is to?", a:["Confuse the listener","Exchange meaning","Entertain only","Display vocabulary"], correct:1},
+    {q:"Which of the following is NOT a form of communication?", a:["Writing","Speaking","Listening","Sleeping"], correct:3},
+    {q:"The process of arranging ideas logically in writing is called?", a:["Narration","Organization","Decoration","Pronunciation"], correct:1},
+    {q:"A paragraph must contain?", a:["Only one sentence","A topic sentence","No examples","Only questions"], correct:1},
+
+    {q:"Which part of speech describes a noun?", a:["Verb","Adverb","Adjective","Preposition"], correct:2},
+    {q:"A word that replaces a noun is known as?", a:["Pronoun","Adjective","Verb","Conjunction"], correct:0},
+    {q:"The plural of ‘criterion’ is?", a:["Criterias","Criterion","Criteria","Criterions"], correct:2},
+    {q:"Which of these is a conjunction?", a:["Quickly","Because","Under","Bright"], correct:1},
+
+    {q:"The correct spelling is?", a:["Enviroment","Environment","Environmant","Envirement"], correct:1},
+    {q:"A group of related sentences expressing one main idea is called?", a:["Clause","Paragraph","Phrase","Essay"], correct:1},
+    {q:"Which punctuation mark ends a question?", a:["Comma","Full stop","Question mark","Colon"], correct:2},
+    {q:"A formal letter usually contains?", a:["Slang","Emojis","Address and signature","No heading"], correct:2},
+
+    {q:"The art of effective speaking is called?", a:["Grammar","Rhetoric","Phonetics","Syntax"], correct:1},
+    {q:"Which skill is most important in communication?", a:["Listening","Guessing","Interrupting","Arguing"], correct:0},
+    {q:"The abbreviation ‘e.g.’ means?", a:["That is","For example","And others","Before now"], correct:1},
+    {q:"Which is an example of non-verbal communication?", a:["Letter","Email","Gesture","Speech"], correct:2},
+
+    {q:"Logic is the study of?", a:["Emotions","Reasoning","Languages","Numbers"], correct:1},
+    {q:"An argument consists of?", a:["Sentences only","Premises and conclusion","Questions","Opinions"], correct:1},
+    {q:"A statement that cannot be both true and false is called?", a:["Opinion","Paradox","Proposition","Question"], correct:2},
+    {q:"Which is NOT a branch of philosophy?", a:["Ethics","Logic","Metaphysics","Biology"], correct:3},
+
+    {q:"Ethics is concerned with?", a:["Beauty","Knowledge","Moral values","Reality"], correct:2},
+    {q:"A deductive argument moves from?", a:["Specific to general","General to specific","False to true","Opinion to fact"], correct:1},
+    {q:"An invalid argument is one whose conclusion?", a:["Is false","Does not follow from premises","Is emotional","Is popular"], correct:1},
+    {q:"Which philosopher is known for the Socratic method?", a:["Plato","Socrates","Aristotle","Descartes"], correct:1},
+
+    {q:"A fallacy is best described as?", a:["A correct argument","An error in reasoning","A true statement","A moral rule"], correct:1},
+    {q:"Philosophy literally means?", a:["Love of wisdom","Fear of knowledge","Search for power","Study of nature"], correct:0},
+    {q:"Which is a branch of philosophy?", a:["Physics","Chemistry","Epistemology","Geography"], correct:2},
+    {q:"Inductive reasoning is based on?", a:["Certainty","Probability","Assumption","Authority"], correct:1},
+
+    {q:"ICT stands for?", a:["Information and Communication Technology","Internet Control Technique","International Computer Tool","Information Coding Technology"], correct:0},
+    {q:"Which of these is an input device?", a:["Monitor","Printer","Keyboard","Speaker"], correct:2},
+    {q:"The brain of the computer is the?", a:["Monitor","CPU","Keyboard","Mouse"], correct:1},
+    {q:"Which storage device is non-volatile?", a:["RAM","Cache","Register","Hard disk"], correct:3},
+
+    {q:"The full meaning of WWW is?", a:["Wide World Web","World Wide Web","World Web Wide","Web World Wide"], correct:1},
+    {q:"Email is an example of?", a:["Verbal communication","Non-verbal communication","Electronic communication","Oral communication"], correct:2},
+    {q:"Which software is used for word processing?", a:["MS Excel","MS Word","MS PowerPoint","MS Access"], correct:1},
+    {q:"A computer virus is a?", a:["Hardware fault","Malicious program","Input device","Storage unit"], correct:1},
+
+    {q:"Nigeria gained independence in?", a:["1957","1959","1960","1963"], correct:2},
+    {q:"The first capital of Nigeria was?", a:["Abuja","Lagos","Ibadan","Calabar"], correct:1},
+    {q:"Nigeria operates which system of government?", a:["Monarchy","Military","Federalism","Communism"], correct:2},
+    {q:"The National Assembly consists of?", a:["House of Lords","Senate and House of Representatives","Council of Chiefs","Judiciary"], correct:1},
+
+    {q:"The official language of Nigeria is?", a:["Yoruba","Hausa","Igbo","English"], correct:3},
+    {q:"Which arm of government interprets the law?", a:["Executive","Legislative","Judiciary","Police"], correct:2},
+    {q:"The Nigerian flag has how many colors?", a:["One","Two","Three","Four"], correct:1},
+    {q:"Green color in Nigerian flag represents?", a:["Peace","Unity","Vegetation","Strength"], correct:2},
+
+    {q:"Citizenship is best defined as?", a:["Voting right","Legal membership of a state","Residence","Employment"], correct:1},
+    {q:"A good citizen should?", a:["Break laws","Avoid taxes","Obey laws","Ignore authority"], correct:2},
+    {q:"Human rights are?", a:["Government gifts","Privileges","Inalienable","Optional"], correct:2},
+    {q:"Which is a civic responsibility?", a:["Watching TV","Paying tax","Sleeping","Travelling"], correct:1},
+
+    {q:"The correct plural of ‘analysis’ is?", a:["Analysises","Analysis","Analyses","Analysiseses"], correct:2},
+    {q:"An essay that tells a story is called?", a:["Descriptive","Narrative","Argumentative","Expository"], correct:1},
+    {q:"A sentence that gives a command is?", a:["Declarative","Interrogative","Imperative","Exclamatory"], correct:2},
+    {q:"The antonym of ‘expand’ is?", a:["Increase","Extend","Contract","Improve"], correct:2}
+],
+
+
+"GST102/GST112: Use of English II / Nigerian Peoples and Culture":[
+    {q:"The main objective of philosophy is to?", a:["Accumulate wealth","Seek wisdom","Win arguments","Follow trends"], correct:1},
+    {q:"Metaphysics deals with?", a:["Study of matter","Nature of reality","Numbers","Language"], correct:1},
+    {q:"Epistemology is the study of?", a:["Knowledge","Morality","Government","Language"], correct:0},
+    {q:"Ethics focuses on?", a:["Facts","Beauty","Moral values","Logic"], correct:2},
+
+    {q:"Logic is concerned with?", a:["Reasoning","Feelings","Memory","Geography"], correct:0},
+    {q:"A syllogism contains?", a:["Two premises and a conclusion","Only a question","One fact","A story"], correct:0},
+    {q:"Inductive reasoning moves from?", a:["Specific to general","General to specific","False to true","Opinion to fact"], correct:0},
+    {q:"A fallacy is?", a:["A valid argument","Error in reasoning","A truth","A formula"], correct:1},
+
+    {q:"Which is NOT a branch of philosophy?", a:["Ethics","Logic","Chemistry","Metaphysics"], correct:2},
+    {q:"A deductive argument moves from?", a:["Specific to general","General to specific","False to true","Opinion to fact"], correct:1},
+    {q:"Who is known as the father of modern philosophy?", a:["Plato","Socrates","Descartes","Aristotle"], correct:2},
+    {q:"The study of beauty is called?", a:["Aesthetics","Ethics","Epistemology","Logic"], correct:0},
+
+    {q:"Which is a characteristic of a good argument?", a:["Emotional appeal only","Valid and sound","Popular opinion","Lengthy"], correct:1},
+    {q:"A statement that asserts something is called?", a:["Question","Proposition","Exclamation","Request"], correct:1},
+    {q:"ICT stands for?", a:["Information and Communication Technology","International Computer Training","Internet Control Technique","Information Coding Tool"], correct:0},
+    {q:"Which is an output device?", a:["Keyboard","Mouse","Printer","Scanner"], correct:2},
+
+    {q:"The CPU of a computer is also called?", a:["Hard disk","Motherboard","Brain","Monitor"], correct:2},
+    {q:"RAM stands for?", a:["Random Access Memory","Read And Memorize","Rapid Access Module","Readily Available Memory"], correct:0},
+    {q:"Which software is used to make presentations?", a:["MS Word","MS Excel","MS PowerPoint","MS Access"], correct:2},
+    {q:"Email is a form of?", a:["Oral communication","Written communication","Electronic communication","Gestures"], correct:2},
+
+    {q:"Nigeria has how many states?", a:["36","30","32","40"], correct:0},
+    {q:"The first Nigerian President was?", a:["Nnamdi Azikiwe","Obafemi Awolowo","Ahmadu Bello","Olusegun Obasanjo"], correct:0},
+    {q:"The National Assembly is made up of?", a:["Senate and House of Representatives","Council of Chiefs","Judiciary","Local Government"], correct:0},
+    {q:"Federalism is?", a:["Unitary system","Division of powers","Dictatorship","Monarchy"], correct:1},
+
+    {q:"A civic duty is?", a:["Obeying laws","Breaking rules","Watching TV","Ignoring taxes"], correct:0},
+    {q:"Human rights are?", a:["Government privileges","Optional","Inalienable","Cultural customs"], correct:2},
+    {q:"Nigerian flag has?", a:["Two colors","Three colors","Four colors","One color"], correct:1},
+    {q:"Green in the Nigerian flag represents?", a:["Peace","Unity","Agriculture/vegetation","Power"], correct:2},
+
+    {q:"The word ‘culture’ primarily means?", a:["Customs and beliefs of a people","Technology","Food","Government"], correct:0},
+    {q:"Which is a Nigerian ethnic group?", a:["Zulu","Igbo","Maasai","Ashanti"], correct:1},
+    {q:"Festivals in Nigeria promote?", a:["Division","Cultural heritage","Confusion","Economy only"], correct:1},
+    {q:"Traditional Nigerian religion emphasizes?", a:["Science","Community and ancestors","Individual wealth","Urbanization"], correct:1},
+
+    {q:"Which of the following is an input device?", a:["Monitor","Scanner","Printer","Speaker"], correct:1},
+    {q:"The motherboard connects?", a:["All components of a computer","Only CPU and RAM","Keyboard and monitor","Printer and scanner"], correct:0},
+    {q:"A website is accessed using?", a:["Email","Web browser","Operating system","Keyboard"], correct:1},
+    {q:"The Internet is?", a:["Local network","Global network of computers","A computer brand","A storage device"], correct:1},
+
+    {q:"Which is NOT part of communication?", a:["Sender","Message","Noise","Ownership"], correct:3},
+    {q:"Active listening involves?", a:["Ignoring speaker","Understanding message","Talking more","Daydreaming"], correct:1},
+    {q:"A speech that persuades is called?", a:["Narrative","Expository","Persuasive","Descriptive"], correct:2},
+    {q:"Non-verbal communication includes?", a:["Emails","Gestures","Books","Phone calls"], correct:1},
+
+    {q:"A compound sentence contains?", a:["One independent clause","Two or more independent clauses","Only adjectives","Only nouns"], correct:1},
+    {q:"A topic sentence is?", a:["The main idea of a paragraph","A random sentence","The last sentence only","An exclamation"], correct:0},
+    {q:"The plural of ‘analysis’ is?", a:["Analysises","Analysis","Analyses","Analysiseses"], correct:2},
+    {q:"A sentence that gives a command is?", a:["Declarative","Interrogative","Imperative","Exclamatory"], correct:2},
+
+    {q:"Which is an example of inductive reasoning?", a:["All humans are mortal; Socrates is human; Socrates is mortal","Many observed crows are black; therefore all crows are black","2+2=4","If it rains, the ground gets wet"], correct:1},
+    {q:"Which philosopher used dialogues to teach?", a:["Aristotle","Socrates","Descartes","Plato"], correct:3},
+    {q:"A good computer password should be?", a:["123456","Your name","Complex and unique","Password"], correct:2},
+    {q:"Which is a search engine?", a:["Word","Google","Excel","PowerPoint"], correct:1},
+
+    {q:"ICT can improve education by?", a:["Providing digital learning tools","Increasing distraction","Replacing teachers entirely","Limiting access"], correct:0},
+    {q:"The Nigerian national anthem promotes?", a:["Laziness","Patriotism","Division","Trade"], correct:1},
+    {q:"A good citizen should?", a:["Obey laws","Ignore taxes","Steal","Protest peacefully"], correct:0},
+    {q:"The main aim of GST courses is?", a:["Acquire only technical skills","Develop all-round knowledge","Learn sports","Focus on entertainment"], correct:1}
+],
+
+
+"GST103: Computer Fundamentals / ICT":[
+    {q:"A good paragraph should have?", a:["Random sentences","A topic sentence and supporting details","Only questions","One word"], correct:1},
+    {q:"A compound sentence contains?", a:["One independent clause","Two or more independent clauses","Only adjectives","Only nouns"], correct:1},
+    {q:"The plural of ‘phenomenon’ is?", a:["Phenomenons","Phenomena","Phenomenon","Phenomenae"], correct:1},
+    {q:"A sentence that gives a command is?", a:["Declarative","Interrogative","Imperative","Exclamatory"], correct:2},
+
+    {q:"Logic helps to?", a:["Increase memory","Improve reasoning","Decorate writing","Predict lottery"], correct:1},
+    {q:"A fallacy is?", a:["A truth","An error in reasoning","A valid argument","A moral rule"], correct:1},
+    {q:"Deductive reasoning moves from?", a:["Specific to general","General to specific","Opinion to fact","False to true"], correct:1},
+    {q:"Inductive reasoning is based on?", a:["Certainty","Observation and probability","Authority","Assumption"], correct:1},
+
+    {q:"Ethics studies?", a:["Moral values","Physical sciences","History","Language"], correct:0},
+    {q:"A good argument should be?", a:["Emotional only","Valid and sound","Popular","Lengthy"], correct:1},
+    {q:"Philosophy literally means?", a:["Love of wisdom","Love of power","Study of science","Search for money"], correct:0},
+    {q:"Which is a branch of philosophy?", a:["Metaphysics","Chemistry","Biology","Geography"], correct:0},
+
+    {q:"ICT stands for?", a:["Information and Communication Technology","International Computer Tool","Internet Control Technique","Information Coding Tool"], correct:0},
+    {q:"Which of these is an input device?", a:["Monitor","Printer","Keyboard","Speaker"], correct:2},
+    {q:"CPU stands for?", a:["Central Processing Unit","Computer Processing Unit","Central Program Unit","Control Processing Unit"], correct:0},
+    {q:"RAM stands for?", a:["Random Access Memory","Readily Available Memory","Rapid Action Module","Read And Memorize"], correct:0},
+
+    {q:"Which software is used for word processing?", a:["MS Word","MS Excel","MS PowerPoint","MS Access"], correct:0},
+    {q:"A computer virus is?", a:["Hardware fault","Malicious software","Input device","Storage unit"], correct:1},
+    {q:"Email is a form of?", a:["Oral communication","Electronic communication","Gestures","Non-verbal only"], correct:1},
+    {q:"Which is a search engine?", a:["Excel","Word","Google","PowerPoint"], correct:2},
+
+    {q:"Nigeria gained independence in?", a:["1960","1957","1963","1959"], correct:0},
+    {q:"The first Nigerian President was?", a:["Nnamdi Azikiwe","Obafemi Awolowo","Ahmadu Bello","Olusegun Obasanjo"], correct:0},
+    {q:"Nigeria has how many states?", a:["32","36","30","40"], correct:1},
+    {q:"Federalism is?", a:["Unitary system","Division of powers","Dictatorship","Monarchy"], correct:1},
+
+    {q:"Civic responsibilities include?", a:["Voting","Watching TV","Ignoring laws","Stealing"], correct:0},
+    {q:"Human rights are?", a:["Optional privileges","Government gifts","Inalienable","Cultural customs"], correct:2},
+    {q:"The Nigerian flag has?", a:["One color","Two colors","Three colors","Four colors"], correct:2},
+    {q:"Green color in Nigerian flag represents?", a:["Peace","Vegetation","Unity","Power"], correct:1},
+
+    {q:"Culture includes?", a:["Customs and beliefs","Food only","Government","Technology"], correct:0},
+    {q:"A Nigerian ethnic group is?", a:["Zulu","Igbo","Maasai","Ashanti"], correct:1},
+    {q:"Traditional festivals promote?", a:["Confusion","Cultural heritage","Division","Only economy"], correct:1},
+    {q:"Traditional Nigerian religion emphasizes?", a:["Individualism","Community and ancestors","Urban life","Technology"], correct:1},
+
+    {q:"Active listening involves?", a:["Ignoring speaker","Understanding message","Talking more","Daydreaming"], correct:1},
+    {q:"Non-verbal communication includes?", a:["Emails","Gestures","Books","Phone calls"], correct:1},
+    {q:"A persuasive speech aims to?", a:["Inform only","Persuade","Narrate","Describe"], correct:1},
+    {q:"A declarative sentence?", a:["Asks a question","Makes a statement","Gives a command","Expresses surprise"], correct:1},
+
+    {q:"A topic sentence?", a:["Is the main idea of a paragraph","Is random","Comes last only","Is a question"], correct:0},
+    {q:"ICT improves education by?", a:["Limiting resources","Providing digital learning tools","Replacing teachers entirely","Increasing distraction"], correct:1},
+    {q:"A website is accessed via?", a:["Operating system","Web browser","Email","Keyboard"], correct:1},
+    {q:"The Internet is?", a:["Local network","Global network of computers","A storage device","A program"], correct:1},
+
+    {q:"A civic duty of a good citizen is?", a:["Obeying laws","Breaking rules","Ignoring taxes","Watching TV"], correct:0},
+    {q:"The main aim of GST103 is?", a:["Develop all-round knowledge","Learn sports","Focus on entertainment","Acquire technical skill only"], correct:0},
+    {q:"A computer password should be?", a:["123456","Your name","Complex and unique","Password"], correct:2},
+    {q:"ICT includes?", a:["Only hardware","Hardware and software","Only communication devices","Only programming"], correct:1},
+
+    {q:"A good citizen should?", a:["Ignore laws","Obey laws","Steal","Be inactive"], correct:1},
+    {q:"The Nigerian national anthem promotes?", a:["Patriotism","Laziness","Division","Trade"], correct:0},
+    {q:"The plural of ‘analysis’ is?", a:["Analysises","Analysis","Analyses","Analysiseses"], correct:2},
+    {q:"A sentence giving strong feeling is?", a:["Declarative","Exclamatory","Imperative","Interrogative"], correct:1},
+
+    {q:"Which is an example of inductive reasoning?", a:["All humans are mortal; Socrates is human; Socrates is mortal","Many observed crows are black; therefore all crows are black","2+2=4","If it rains, ground gets wet"], correct:1},
+    {q:"Socrates taught using?", a:["Monologues","Dialogues","Books","Experiments"], correct:1},
+    {q:"A compound sentence is formed by?", a:["Joining independent clauses","Using only adjectives","Using one noun","Using one verb"], correct:0},
+    {q:"A paragraph expresses?", a:["Multiple unrelated ideas","One main idea","Numbers only","Random words"], correct:1}
+],
+
+
+
+  
+    "Atomic Structure":[
+        {q:"Who discovered the Electron?", a:["Dalton","Bohr","J.J. Thomson","Rutherford"], correct:2},
+        {q:"What is the charge of a neutron?", a:["Positive","Negative","Neutral","Variable"], correct:2}
+    ]
+};
+
+let currentUserData={course:'',topic:'',numQuestions:0,timeLimit:0};
+let quizData=[], currentQIndex=0, userAnswers={}, timerInterval=null;
+
+// Dark Mode
+function toggleDarkMode(){document.body.classList.toggle('dark-mode');}
+
+/* ===== VIEW CONTROL ===== */
+function showView(id){
+document.querySelectorAll('.container>div').forEach(v=>v.classList.add('hidden'));
+document.getElementById(id).classList.remove('hidden');
+currentView=id;
+}
+
+/* ===== CONFIRM BACK ===== */
+function confirmBack(target){
+if(quizStarted || currentView!=="view-courses"){
+if(!confirm("Are you sure you want to go back? Progress may be lost."))return;
+}
+quizStarted=false;
+showView(target);
+}
+
+
+// Fade Functions
+function fadeIn(element){element.classList.remove('hidden');element.classList.add('fade-enter');requestAnimationFrame(()=>{element.classList.add('fade-enter-active');element.classList.remove('fade-enter');});setTimeout(()=>element.classList.remove('fade-enter-active'),350);}
+function fadeOut(element,callback){element.classList.add('fade-exit');requestAnimationFrame(()=>{element.classList.add('fade-exit-active');element.classList.remove('fade-exit');});setTimeout(()=>{element.classList.remove('fade-exit-active');element.classList.add('hidden');if(callback)callback();},250);}
+
+// Show View with Fade
+function showView(viewId){
+    document.querySelectorAll('.container > div').forEach(div=>{if(!div.classList.contains('hidden'))fadeOut(div);});
+    setTimeout(()=>fadeIn(document.getElementById(viewId)),260);
+}
+
+// Login
+function handleLogin(){
+    const code=document.getElementById('access-code').value.toUpperCase();
+    const errorEl=document.getElementById('login-error');
+    if(!accessCodes.includes(code)){errorEl.innerText="Invalid Access Code";errorEl.classList.remove('hidden');return;}
+    let usage=JSON.parse(localStorage.getItem('ofuje_usage')||'{}');
+    let count=usage[code]||0;
+    if(count>=2){errorEl.innerText="Code usage limit reached (Max 2).";errorEl.classList.remove('hidden');return;}
+    usage[code]=count+1;
+    localStorage.setItem('ofuje_usage',JSON.stringify(usage));
+    initCourses(); showView('view-courses');
+}
+
+// Courses & Topics
+function initCourses(){const grid=document.getElementById('course-grid');grid.innerHTML='';Object.keys(database).forEach(course=>{const div=document.createElement('div');div.className='item-card';div.innerHTML=`<i class="fas fa-book"></i><h4>${course}</h4>`;div.onclick=()=>selectCourse(course);grid.appendChild(div);});}
+function selectCourse(course){currentUserData.course=course;document.getElementById('selected-course-title').innerText=course+" Topics";const grid=document.getElementById('topic-grid');grid.innerHTML='';database[course].forEach(topic=>{const div=document.createElement('div');div.className='item-card';div.innerHTML=`<i class="fas fa-layer-group"></i><h4>${topic}</h4>`;div.onclick=()=>selectTopic(topic);grid.appendChild(div);});showView('view-topics');}
+function selectTopic(topic){currentUserData.topic=topic;showView('view-settings');}
+function filterItems(inputId,gridId){let input=document.getElementById(inputId).value.toLowerCase();let cards=document.getElementById(gridId).getElementsByClassName('item-card');for(let card of cards)card.style.display=card.innerText.toLowerCase().includes(input)?"":"none";}
+
+
+/* ===== UTILS ===== */
+function shuffleArray(arr){
+for(let i=arr.length-1;i>0;i--){
+let j=Math.floor(Math.random()*(i+1));
+[arr[i],arr[j]]=[arr[j],arr[i]];
+}
+}
+
+/* ===== OPTION SHUFFLE (LOCK AFTER SELECT) ===== */
+function shuffleOptions(q,i){
+if(!q._shuffled){
+const opts=q.a.map((t,idx)=>({t,idx}));
+shuffleArray(opts);
+q.a=opts.map(o=>o.t);
+q.correct=opts.findIndex(o=>o.idx===q.correct);
+q._shuffled=true;
+}
+}
+
+// Quiz
+function startQuiz() {
+    const qCount = parseInt(document.getElementById('set-questions').value);
+    const tLimit = parseInt(document.getElementById('set-timer').value);
+    currentUserData.numQuestions = qCount;
+    currentUserData.timeLimit = tLimit;
+
+    // Get questions for the selected topic
+    const topicQuestions = [...(questionsDB[currentUserData.topic] || [])];
+    if(topicQuestions.length === 0){
+        alert("No questions available for this topic yet!");
+        return;
+    }
+
+    shuffleArray(topicQuestions);
+    quizData = topicQuestions.slice(0, qCount); // Limit to user pick
+
+    currentQIndex = 0;
+    userAnswers = {};
+
+    showView('view-quiz');
+    renderQuestion();
+    startTimer(currentUserData.timeLimit);
+    initQuestionNav();
+}
+
+function shuffleArray(array){for(let i=array.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[array[i],array[j]]=[array[j],array[i]];}}
+
+function renderQuestion(){const q=quizData[currentQIndex]; const container=document.getElementById('question-container');document.getElementById('q-count').innerText=`${currentQIndex+1}/${quizData.length}`;
+container.innerHTML=`<h3>${q.q}</h3><div class="options-list">${q.a.map((opt,i)=>`<div class="option ${userAnswers[currentQIndex]===i?'selected':''}" onclick="selectOption(${i})">${opt}</div>`).join('')}</div>`;
+document.getElementById('prevBtn').disabled=currentQIndex===0;
+document.getElementById('nextBtn').classList.toggle('hidden',currentQIndex===quizData.length-1);
+document.getElementById('submitBtn').classList.toggle('hidden',currentQIndex!==quizData.length-1);
+updateQuestionNav();}
+
+function selectOption(index){userAnswers[currentQIndex]=index; renderQuestion();}
+function changeQuestion(step){currentQIndex+=step; renderQuestion();}
+function startTimer(mins){if(mins===0){document.getElementById('timer-display').innerText='Untimed';return;}let seconds=mins*60;timerInterval=setInterval(()=>{let m=Math.floor(seconds/60),s=seconds%60;document.getElementById('timer-display').innerText=`${m}:${s<10?'0'+s:s}`;if(seconds<=0){clearInterval(timerInterval);calculateResults();}seconds--;},1000);}
+function calculateResults(){clearInterval(timerInterval);let score=0,listHTML='';quizData.forEach((q,i)=>{const isCorrect=userAnswers[i]===q.correct;if(isCorrect)score++;listHTML+=`<div class="correction-item"><p><strong>Q${i+1}: ${q.q}</strong></p><p style="color:${isCorrect?'var(--success)':'var(--error)'}">Your Answer: ${userAnswers[i]!==undefined?q.a[userAnswers[i]]:'No Answer'}</p>${!isCorrect?`<p style="color: var(--success)">Correct Answer: ${q.a[q.correct]}</p>`:''}</div>`;});const percent=Math.round((score/quizData.length)*100);let remark=percent>=50?"Congratulations! Professional Pass.":"Need Improvement. Try Again.";document.getElementById('res-score').innerText=percent+"%";document.getElementById('res-details').innerHTML=`<p>Score: ${score} / ${quizData.length}</p><p><strong>${remark}</strong></p>`;document.getElementById('corrections-list').innerHTML=listHTML;showView('view-results');}
+
+// Question Nav Panel
+function initQuestionNav(){const nav=document.getElementById('question-nav');nav.innerHTML='';quizData.forEach((_,i)=>{const btn=document.createElement('button');btn.innerText=i+1;btn.onclick=()=>{currentQIndex=i; renderQuestion();};nav.appendChild(btn);});}
+function updateQuestionNav(){const buttons=document.getElementById('question-nav').children;for(let i=0;i<buttons.length;i++){buttons[i].classList.remove('answered','unanswered');if(userAnswers[i]!==undefined)buttons[i].classList.add('answered');else buttons[i].classList.add('unanswered');}}
+
+/* ===== BLOCK BROWSER BACK DURING QUIZ ===== */
+history.pushState(null,null,location.href);
+window.onpopstate=()=>{if(quizStarted){history.pushState(null,null,location.href);alert("Submit exam before leaving.");}};
+</script>
+</body>
+</html>
